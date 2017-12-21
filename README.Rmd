@@ -1,7 +1,7 @@
 
 Ceci est la page du projet visant à rexpliquer/prédire les fusions de communes du meilleur groupe de la promo datascience 2018 du cepe.
 
-Objectif : modéliser la fusion (ou non) des communes, en fonction de :
+Objectif : modéliser la fusion (ou non) des communesà partir de 2015, en fonction de :
 
 - (dis)similarités socio-éco-démo-géographiques : je monte la base en ce moment
 - Liens entre les communes (navettes domicile-travail, déménagements, logements loués dans la commune A possédés par des bailleurs de la commune B...). Je monte la base aussi
