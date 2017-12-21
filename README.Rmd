@@ -1,0 +1,21 @@
+---
+title: "README"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Ceci est la page du projet visant à rexpliquer/prédire les fusions de communes du meilleur groupe de la promo datascience 2018 du cepe.
+
+Objectif : modéliser la fusion (ou non) des communes, en fonction de :
+
+- (dis)similarités socio-éco-démo-géographiques : je monte la base en ce moment
+- Liens entre les communes (navettes domicile-travail, déménagements, logements loués dans la commune A possédés par des bailleurs de la commune B...). Je monte la base aussi
+- Intérêt financier à fusionner. Base à monter à partir du relevé des éléments d'impositions (il y a carotte budgétaire pour les communes qui fusionnent, donc un potentiel plus fort pour celles qui sont pas gâtées). https://www.impots.gouv.fr/portail/base-de-donnees-rei-2016
+- similarités politiques : base à construire, pas de source identifiée à ce jour (scrapping, peut-être)
+Ca peut nous faire faire plein de modélisations intéressantes ! yc des réseaux de neurones ou de l'optimisation sur un modèle de micro-simulation !
+- Il reste à monter la base sur les fusions passées (quelles communes ont fusionné). Pour ça, on peut récupérer une base et des programmes sur ce github : https://github.com/antuki/COGugaison/blob/master/vignettes/COGugaison.Rmd
+
+**RAPPEL** : toutes les bases de données doivent être en géographie 2015. Utiliser le package [COGugaison](https://github.com/antuki/COGugaison/blob/master/vignettes/COGugaison.Rmd) si besoin
