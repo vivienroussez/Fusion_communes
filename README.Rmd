@@ -1,11 +1,3 @@
-# ---
-# title: "README"
-# output: html_document
-# ---
-# 
-# ```{r setup, include=FALSE}
-# knitr::opts_chunk$set(echo = TRUE)
-# ```
 
 Ceci est la page du projet visant à rexpliquer/prédire les fusions de communes du meilleur groupe de la promo datascience 2018 du cepe.
 
