@@ -8,3 +8,13 @@ download.file("https://drive.google.com/uc?export=download&id=1KQDhDTkTvHpySsEhm
 download.file("https://drive.google.com/uc?export=download&id=1g6Ohx4bI1c4h2KhFNl1TXEz5BYOAEjcK",destfile = "Sources/COMMUNE.prj")
 download.file("https://drive.google.com/uc?export=download&id=1UTtSV5h6rXBSnPnvTG5i9izvHa-x_GKU",destfile = "Sources/COMMUNE.shp")
 download.file("https://drive.google.com/uc?export=download&id=1QePSRrQNmNCZ52n31M2ufMLD27zsI3aA",destfile = "Sources/COMMUNE.shx")
+
+
+# Liens locataires propriétaires
+download.file("https://drive.google.com/uc?export=download&id=1AGCZ1cFp1M_DwA7T246jMtafuroIrW_G",destfile = "locprop.csv")
+
+# migrations
+download.file("https://drive.google.com/uc?export=download&id=17ea5ku4Xkn2s-IIEOpON5F3hqXDJvRZW",destfile = "migrations.csv")
+
+# Résidences secondaires
+download.file("https://drive.google.com/uc?export=download&id=1Ww_EexxohhjU0ysvg166bHNWm9S3z9Dr",destfile = "RS.csv"
