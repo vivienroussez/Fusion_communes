@@ -8,7 +8,7 @@ require(foreach)
 require(doParallel)
 
 datacomm <- fread("Sources/Base_communes.csv",sep=";",dec=",",colClasses = c("REG"="chr"))
-mapCom <- st_read("Sources/COMMUNE.shp")
+mapCom <- st_read("Sources_orig/COMMUNE.shp")
 
 mapCom <- select(mapCom,-ID_GEOFLA, -starts_with("CODE"), -POPULATION,-starts_with("NOM")) %>%
        rename(codgeo=INSEE_COM)
@@ -32,7 +32,6 @@ plot(mapCom[contig[[1]],3],col="blue")
 plot(mapCom[contig[[1]][[1]],3],col="black",add=T)
 
 # On va transformer la liste en dataframe à 2 colonnes avec chaque couple de communes contigues
-
 couples <- data.frame()
 for (ii in 1:length(contig))
 {
