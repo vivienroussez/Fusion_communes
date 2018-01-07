@@ -4,11 +4,9 @@ require(sf)
 require(data.table)
 require(FactoMineR)
 require(parallel)
-require(foreach)
-require(doParallel)
 
 datacomm <- fread("Sources/Base_communes.csv",sep=";",dec=",",colClasses = c("REG"="chr"))
-mapCom <- st_read("Sources_orig/COMMUNE.shp")
+mapCom <- st_read("Sources/COMMUNE.shp")
 
 mapCom <- select(mapCom,-ID_GEOFLA, -starts_with("CODE"), -POPULATION,-starts_with("NOM")) %>%
        rename(codgeo=INSEE_COM)
