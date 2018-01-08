@@ -96,15 +96,27 @@ rm(cl)
 
 distances <- t(distances) %>% as.data.frame()
 names(distances) <- c("first","second",paste("dist",names(dat),sep="_"))
-head(distances,1000) %>% View()
+distances$ident <- paste(distances$first,distances$second,sep="_")
+
+head(distances,1000)
 
                           
                           #########################################
                           ### Ajour des indicateurs de flux     ###
                           #########################################
+
 couples$codgeo1 <- mapCom$codgeo[couples$Var1]
 couples$codgeo2 <- mapCom$codgeo[couples$Var2]
 
 flux <- merge(couples,locprop,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","codgeopro"),all.x=T) %>%
         merge(RS,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","codgeopro"),all.x=T) %>%
         merge(mig,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","dcran"),all.x=T)
+
+flux[is.na(flux)] <- 0
+
+flux <- group_by(flux,ident) %>% summarise(nb_locprop=sum(nb_locprop),
+                                           nb_RS=sum(nb_RS),
+                                           nb_mig=sum(nb_mig))
+
+base <- merge(distances,flux,by.x="ident",by.y="ident")
+save(base,mapCom,file="Base.RData")
