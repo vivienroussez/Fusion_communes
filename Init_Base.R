@@ -119,4 +119,4 @@ flux <- group_by(flux,ident) %>% summarise(nb_locprop=sum(nb_locprop),
                                            nb_mig=sum(nb_mig))
 
 base <- merge(distances,flux,by.x="ident",by.y="ident")
-save(base,mapCom,file="Base.RData")
+save(base,mapCom,couples,file="Base.RData")
