@@ -8,13 +8,36 @@ require(parallel)
 datacomm <- fread("Sources/Base_communes.csv",sep=";",dec=",",colClasses = c("REG"="chr"))
 mapCom <- st_read("Sources/COMMUNE.shp")
 
+recode_arrond <- function(depcom)
+{
+  codgeo <- as.character(depcom)
+  codgeo[(substr(depcom,1,2)=="75")]<-c("75056")
+  codgeo[(substr(depcom,1,4)=="6938")]<-c("69123")
+  codgeo[(substr(depcom,1,3)=="132")]<-c("13055")
+  return(codgeo)
+}
+
 # bases de flux (liens entre commune A et B)
 locprop <- fread("Sources/LOC_PROP.csv",sep=";",colClasses = c("codgeo"="factor","codgeopro"="factor")) %>%
-        rename(nb_locprop=nb) %>% select(-revb,-ucm)
+        rename(nb_locprop=nb)  %>% 
+        mutate(codgeopro=recode_arrond(codgeopro), codgeo=recode_arrond(codgeo)) %>%
+        group_by(codgeo,codgeopro) %>% summarise(nb_locprop=sum(nb_locprop))
+
 mig <- fread("Sources/MIGRATION.csv",sep=";",colClasses = c("codgeo"="factor","dcran"="factor")) %>%
-        rename(nb_mig=nbflux)
+      rename(nb_mig=nbflux) %>% 
+      mutate(dcran=recode_arrond(dcran), codgeo=recode_arrond(codgeo)) %>%
+      group_by(codgeo,dcran) %>% summarise(nb_mig=sum(nb_mig))
+
 RS <- fread("Sources/RS.csv",sep=";",colClasses = c("codgeo"="factor","codgeopro"="factor"))%>%
-  rename(nb_RS=nb) %>% select(-revb,-ucm)
+    rename(nb_RS=nb) %>% select(-revb,-ucm) %>% 
+    mutate(codgeopro=recode_arrond(codgeopro), codgeo=recode_arrond(codgeo)) %>%
+    group_by(codgeo,codgeopro) %>% summarise(nb_RS=sum(nb_RS))
+
+navettes <- fread("Sources/base-texte-flux-mobilite-domicile-lieu-travail-2013.txt",sep=";",
+                      colClasses = c("CODGEO"="factor","DCLT"="factor")) %>% 
+            rename(nb_navettes=NBFLUX_C13_ACTOCC15P,codgeo=CODGEO) %>%
+            mutate(DCLT=recode_arrond(DCLT), codgeo=recode_arrond(codgeo)) %>%
+            group_by(codgeo,DCLT) %>% summarise(nb_navettes=sum(nb_navettes))
 
 ###################################################################
 ### Pour compléter la base d'indicateurs communaux, c'est ici ! ###
@@ -29,7 +52,8 @@ RS <- fread("Sources/RS.csv",sep=";",colClasses = c("codgeo"="factor","codgeopro
                           ###############################################
 
 mapCom <- select(mapCom,-ID_GEOFLA, -starts_with("CODE"), -POPULATION,-starts_with("NOM")) %>%
-       rename(codgeo=INSEE_COM)
+          mutate(codgeo=recode_arrond(INSEE_COM)) %>%
+          group_by(codgeo) %>% summarise()
 contig <- st_intersects(mapCom,mapCom) # Matrice de contiguité
 
 # On enlève le premier élément qui est la commune elle-même
@@ -81,11 +105,16 @@ dat <- select_if(datacomm,is.numeric)
 calculeDist <- function(couple)
 {
   sel <- dat[as.numeric(couple),]
-  aa <- apply(sel,MARGIN = 2,dist)   %>% as.numeric()
-  aa <- c(as.numeric(couple),aa) # %>% t() %>% as.data.frame()
+  aa <- apply(sel,MARGIN = 2,function(x) (x-lag(x))/(x+lag(x))) 
+  aa <- c(as.numeric(couple),aa[2,])
+  # aa <- apply(sel,MARGIN = 2,dist)   %>% as.numeric()
+  # aa <- c(as.numeric(couple),aa) # %>% t() %>% as.data.frame()
   return(aa)
 }
-calculeDist(uniques[1,c("first","second")]) 
+# 
+# calculeDist(uniques[1,c("first","second")]) 
+# calculeDist(uniques[2,c("first","second")]) 
+# apply(uniques[1:20,c("first","second")],MARGIN = 1,calculeDist)
 
 cl <- makeCluster(detectCores()-1)
 clusterEvalQ(cl,require(dplyr))
@@ -99,6 +128,13 @@ names(distances) <- c("first","second",paste("dist",names(dat),sep="_"))
 distances$ident <- paste(distances$first,distances$second,sep="_")
 
 head(distances,1000)
+                
+                ###########################################################
+                ### Ajour des indicateurs d'appartenance géographique   ###
+                ###########################################################
+
+
+
 
                           
                           #########################################
@@ -110,13 +146,15 @@ couples$codgeo2 <- mapCom$codgeo[couples$Var2]
 
 flux <- merge(couples,locprop,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","codgeopro"),all.x=T) %>%
         merge(RS,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","codgeopro"),all.x=T) %>%
-        merge(mig,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","dcran"),all.x=T)
+        merge(mig,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","dcran"),all.x=T) %>%
+        merge(navettes,by.x=c("codgeo1","codgeo2"),by.y=c("codgeo","DCLT"),all.x=T)
 
 flux[is.na(flux)] <- 0
 
 flux <- group_by(flux,ident) %>% summarise(nb_locprop=sum(nb_locprop),
                                            nb_RS=sum(nb_RS),
-                                           nb_mig=sum(nb_mig))
+                                           nb_mig=sum(nb_mig),
+                                           nb_navettes=sum(nb_navettes))
 
 base <- merge(distances,flux,by.x="ident",by.y="ident")
 save(base,mapCom,couples,file="Base.RData")
