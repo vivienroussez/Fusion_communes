@@ -1,10 +1,8 @@
-install.packages("devtools")
+#install.packages("devtools")
 library(devtools)
-
-install("C:/Users/umdp023/Downloads/COGugaison-master")
-devtools::install_github("antuki/COGugaison")
+#devtools::install_github("antuki/COGugaison")
 library(COGugaison)
-library(dplyr)
+library(tidyverse)
 
 load("Base.RData")
 
@@ -64,8 +62,8 @@ table(couples_ebh$fusion_2015)
 table(couples_ebh$fusion_2016)
 
 #dédupliquer pour ne garder que les identifiants uniques
-couples_ebh1$fusion <- couples_ebh1$fusion_2015+couples_ebh1$fusion_2016
-couples_ebh1 <- group_by(couples_ebh1,ident) %>% summarise(fusion=sum(fusion))
+couples_ebh$fusion <- couples_ebh$fusion_2015+couples_ebh$fusion_2016
+couples_ebh <- group_by(couples_ebh,ident) %>% summarise(fusion=sum(fusion))
 
-base<-merge(base,couples_ebh1,by.x="ident",by.y="ident",all.x=T)
-
+base<-merge(base,couples_ebh,by.x="ident",by.y="ident",all.x=T)
+save(base,mapCom,couples,file="Base.RData")
