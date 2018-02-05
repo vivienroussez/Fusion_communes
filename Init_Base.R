@@ -45,7 +45,15 @@ navettes <- fread("Sources/base-texte-flux-mobilite-domicile-lieu-travail-2013.t
 
 # datacomm <- merge(datacomm,yyyyy,by.x="CODGEO",by.y="bloublou",all.x=T)
 
+zonages <- read.csv("Sources/zonages.csv",sep=";",colClasses = c("epci2014"="factor","epci2016"="factor",
+                                                                 "scot"="factor","plui"="factor","ze"="factor")) %>% 
+            select(codgeo,dep,ze,bv,au,epci2014,epci2016,scot,plui)
+revenus <- read.csv("Sources/REVCOM15.csv",sep=";") %>% mutate(revmoy=revbrut/ucm) %>% select(codgeo,revmoy)
+potfi   <- read.csv("Sources/potentiel_fin_DATA2013_COG2015.csv",sep=";",dec=",") %>% select(-popdgf)
 
+datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
+            merge(revenus,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
+            merge(potfi,by.x="CODGEO",by.y="com",all.x=T)
 
                           ###############################################
                           ### Créations des couples de comm contigues ###
@@ -133,11 +141,32 @@ head(distances,1000)
                 ### Ajour des indicateurs d'appartenance géographique   ###
                 ###########################################################
 
+dat <- select_if(datacomm,is.factor) %>% mutate_all(as.character)
+## Pour les valeurs manquantes, on remplace par le codgeo pour ne pas avoir d'égalité 
+## quand les communes n'ont pas de PLU, SCOT...
+
+dat <- mutate_all(dat,function(x) replace(x,which(x==""),as.character(dat$CODGEO[x==""]))) %>%
+        select(-CODGEO) 
+
+memeZonage <- function(couple)
+{
+  sel <- dat[as.numeric(couple),]
+  aa <- apply(sel,MARGIN=2,function(x) as.numeric(x==lag(x))) %>% as.data.frame()
+  return(aa[2,])
+}
+
+cl <- makeCluster(detectCores()-1)
+clusterEvalQ(cl,require(dplyr))
+clusterExport(cl,c("uniques","memeZonage","dat"))
+zones <- parApply(cl,uniques[,c("first","second")],MARGIN = 1,memeZonage)
+stopCluster(cl)
+rm(cl)                         
+zones <- do.call(rbind,zones)   ### Le résultat est une liste (je pige pas pourquoi) ; on empile toutes les DF
+                                ### qui sont dedans avec cette commande
+zones$ident <- uniques$ident
 
 
-
-                          
-                          #########################################
+                         #########################################
                           ### Ajour des indicateurs de flux     ###
                           #########################################
 
@@ -156,5 +185,6 @@ flux <- group_by(flux,ident) %>% summarise(nb_locprop=sum(nb_locprop),
                                            nb_mig=sum(nb_mig),
                                            nb_navettes=sum(nb_navettes))
 
-base <- merge(distances,flux,by.x="ident",by.y="ident")
+base <- merge(distances,flux,by.x="ident",by.y="ident") %>%
+        merge(zones,by.x="ident",by.y="ident")
 save(base,mapCom,couples,file="Base.RData")
