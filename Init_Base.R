@@ -163,6 +163,7 @@ stopCluster(cl)
 rm(cl)                         
 zones <- do.call(rbind,zones)   ### Le résultat est une liste (je pige pas pourquoi) ; on empile toutes les DF
                                 ### qui sont dedans avec cette commande
+zones <- mutate_all(zones,as.factor)
 zones$ident <- uniques$ident
 
 
