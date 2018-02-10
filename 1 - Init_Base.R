@@ -50,10 +50,12 @@ zonages <- read.csv("Sources/zonages.csv",sep=";",colClasses = c("epci2014"="fac
             select(codgeo,dep,ze,bv,au,epci2014,epci2016,scot,plui)
 revenus <- read.csv("Sources/REVCOM15.csv",sep=";") %>% mutate(revmoy=revbrut/ucm) %>% select(codgeo,revmoy)
 potfi   <- read.csv("Sources/potentiel_fin_DATA2013_COG2015.csv",sep=";",dec=",") %>% select(-popdgf)
+polit <- read.csv2("Sources/Synthese_pol.csv")
 
 datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             merge(revenus,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
-            merge(potfi,by.x="CODGEO",by.y="com",all.x=T)
+            merge(potfi,by.x="CODGEO",by.y="com",all.x=T) %>%
+            merge(polit,by.x="CODGEO",by.y="codgeo",all.x=T)
 
                           ###############################################
                           ### Créations des couples de comm contigues ###
