@@ -1,0 +1,169 @@
+---
+title: "Analyse des résultats électoraux par commune"
+output: 
+  html_notebook:
+    code_folding: hide
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+<style> body {text-align: justify}  </style>
+
+# Un proxy de la couleur politique d'une commune
+
+Pour alimenter le modèle de machine learning, une variable qui semble, a priori, très importante, est la proximité politique entre chaque couple de communes ; on peut penser que si les mairies, avant la fusion, ont des couleurs semblables, la probabilité d'un accord de fusion entre les deux communes est plus grande.
+N'ayant à disposition aucune donnée vraiment structurée concernant la couleur politique de telle ou telle mairie, nous avons opté pour l'analyse des résultats des élections présidentielles du premier tour de 2017. L'hypothèse est que les votes des électeurs lors de l'élection nationale donne un proxy raisonnable de l'orientation locale. Cette hypothèse est naturellement simplificatrice et n'est pas valable partout (implantation locale d'une personnalité, absence d'étiquette des élus locaux...).
+
+Les données sont disponibles sur data.gouv.fr et proviennent du ministère de l'intérieur. Le choix s'est porté sur le premier tour dans la mesure où celui-ci contient plus de variance, puisque davantage de candidats.
+
+# Préparation des données
+
+Avant de démarrer, il faut installer le package COGugaison, qui permet de passer facilement d'un millésime de géographique comunale à un autre. On charge en plus les packages du tidyverse, FactoMineR pour l'analyse des données, et sf pour la gestion des données géographiques. On charge également le fonds de carte communale de l'IGN. Pour le fonds de carte, il faut passer des arrondissements (Paris, Lyon, Marseille) à la commune (on ne dispose pas des informations à l'arrondissement dans la plupart des cas)
+
+```{r,message=FALSE}
+# require(devtools)
+# devtools::install_github("antuki/COGugaison")
+require(COGugaison)
+require(tidyverse)
+require(FactoMineR)
+require(sf)
+require(cartography)
+require(fpc)
+mapCom <- st_read("../Sources/COMMUNE.shp")
+
+recode_arrond <- function(depcom)
+{
+  codgeo <- as.character(depcom)
+  codgeo[(substr(depcom,1,2)=="75")]<-c("75056")
+  codgeo[(substr(depcom,1,4)=="6938")]<-c("69123")
+  codgeo[(substr(depcom,1,3)=="132")]<-c("13055")
+  return(codgeo)
+}
+
+mapCom <- mutate(mapCom,codgeo=recode_arrond(mapCom$INSEE_COM)) %>%
+          select(codgeo) %>%
+          group_by(codgeo) %>%
+          summarise()
+```
+
+
+Les données initiales se présentent comme un fichier de 36000 lignes avec pour chaque candidats 7 colonnes donnant notamment le nom, prénom, nombre de voix et les pourcentages correspondants. Le premier travail consiste à passer de ce format "large" inexploitable à un format "long" qui aura un ligne pour chaque croisement commune*candidat avec en colonne le nombre de voix. On gère également le millésime du COG en se ramenant au COG2015 comme pour les autres variables que l'on ajoute par la suite.
+
+```{r}
+elect <- read.csv("../Sources/Elections.csv",sep=";",skip=2,header = T,dec=',') %>%
+        select(-starts_with("pct_"),-starts_with("prenom")) 
+
+# on repère les variables quali des variables de comptage pour la suite (changement géo)
+var_nom <- grep("nom",names(elect))
+var_voix <- grep("voix",names(elect))
+var_nom_lib <- names(elect)[var_nom]
+var_voix_lib <- names(elect)[var_voix]
+
+
+# Changement de géogprahie : on passe du COG2017 au COG2015
+noms <- elect[,c(3,var_nom)] %>% 
+      changement_COG_typo(typos=var_nom_lib,codgeo_entree = "codgeo",annees = 2017:2015) 
+
+voix <- elect[,c(3,var_voix)] %>% 
+        changement_COG_varNum(var_num = var_voix_lib,codgeo_entree = "codgeo",annees = 2017:2015)
+
+
+# On reformate la table pour avoir un format "long". 
+# On procède séparément pour les 2 variables quali latentes (candidats et nb votes)
+dat <- merge(noms,voix,by.x="codgeo",by.y="codgeo")
+noms <- select(dat,codgeo,starts_with("nom")) %>%  gather(key = "nom",value = "candidat",-codgeo)
+voix <- select(dat,codgeo,starts_with("voix")) %>%  gather(key = "voix",value = "nombre_voix",-codgeo)
+# Rapprochement des 2 
+dat <- cbind(noms,voix)[,-4]
+dat <- dat %>% filter( !substr(dat$codgeo,1,2) %in% c("ZZ","97")) 
+# la fonction de COGugaison a donné des modalités nouvelles... On les enlève
+biz <- grep("et",dat$candidat)
+dat <- dat[-biz,]
+```
+
+# Analyse factorielle des résultats
+
+Maintenant que nous disposons d'une table exploitable, on peut réaliser une analyse factorielle pour pouvoir synthétiser le positionnement politique des communes. Pour cela, on effectue une analyse factorielle des correspondance, puisqu'on dispose de 2 variables qualitatives : la commune (individus lignes dans le tableau de contingence) et le candidat (individus colonne).
+
+```{r}
+# On fait le tableau de contingence pour l'AFC avec factominer
+tab <- xtabs(data=dat,formula=nombre_voix~codgeo+candidat)
+# On élimine quelques communes pour lesquelles il n'y a pas de vote (hors blancs)
+# Sinon l'AFC ne passe pas 
+sans.vote <- which(apply(tab,MARGIN = 1,sum) ==0)
+tab <- tab[-sans.vote,]
+
+afc <- CA(tab,graph = F,ncp=4) 
+barplot(afc$eig[,1])
+```
+
+D'après l'histogramme des valeurs propres, on voit que l'inertie du tableau de contingence est très concentrée sur les 2 premiers axes factoriels, à hauteur de 70%. Le critère du point d'inflexion conduirait à retenir les 4 premiers axes (la dérivée seconde change de signe au niveau de la 4e valeur propre), pour 87% de l'inertie totale. 
+
+```{r}
+par(mfrow=c(1,2))
+plot.CA(afc,invisible = "row")
+plot.CA(afc,invisible = "row",axes = 3:4)
+
+# On ne voit rien sur les graphique des individus-lignes
+# plot.CA(afc,invisible = "col")
+# plot.CA(afc,invisible = "col",axes = 3:4)
+```
+
+On observe un effet Guttman assez net sur le premier plan factoriel : on a une opposition nette entre les candidats extrêmes à droite et les candidats "modérés" sur la gauche. Le second axes semble davantage retracer le clivage gauche-droite, avec les candidats Macron et Le Pen proche du barycentre. Le dexième plan factoriel donne lui à voir des différences moins structurantes à l'échelle nationale, mais on voit nettement la particularité "locale" du vote Lassalle, ainsi que (dans une moindre mesure) de celui en faveur de Dupont-Aignan.
+
+La représentation cartographique de ces axes factoriels :
+
+```{r,message=FALSE}
+par(mfrow=c(1,2),mar=c(.5,.5,1.5,.5))
+coord <- data.frame(codgeo=row.names(afc$row$coord),afc$row$coord)
+map <- merge(mapCom,coord,by.x="codgeo",by.y="codgeo",all.x=T)
+choroLayer(map,var="Dim.1",nclass = 8,border=NA,legend.pos = "n")
+title("Modérés (clair) vs extrêmes (foncé)")
+choroLayer(map,var="Dim.2",nclass = 8,border=NA,legend.pos = "n")
+title("Gauche (foncé) vs Droite (clair)")
+choroLayer(map,var="Dim.3",nclass = 8,border=NA,legend.pos = "n")
+title("Vote Lassalle")
+choroLayer(map,var="Dim.4",nclass = 8,border=NA,legend.pos = "n")
+title("Vote Dupont-Aignan")
+```
+
+# Synthèse : typologie communale
+
+Pour la suite des opérations (modélisation de fusion/ non fusion), nous allons garder les 4 variables quantitatives obtenues par l'AFC mais pour pousser la démarche jusqu'au bout, nous réalisons une classification (clustering) des communes à partir des coordonnées factorielles obtenues. Etant donnés le nombre d'individus et le manque de puissance de la machine sur laquelle je travaille (4Go de RAM), une CAH est impossible (sauf à faire un premier k-means pour diminuer la dimension...), nous réalisons donc un clustering avec l'algorithme k-means puis dbscan
+
+```{r,message=FALSE}
+# db <- dbscan(coord[,-1],eps=.1)
+lst_km <- list()
+lst_km.ss <- list()
+for (ii in 1:20)
+{
+  lst_km[[ii]] <- kmeans(coord[,-1],ii,iter.max = 20)
+  lst_km.ss[[ii]] <- lst_km[[ii]]$betweenss/lst_km[[ii]]$totss
+}
+unlist(lst_km.ss) %>% plot(col="blue",xlab="Nombre de classes",ylab="Variance interclasse")
+```
+
+Le gain de variance inter-classes augmente très rapidement quand on agmente le nombre de classe, mais le gain marginal s'atténue assez rapidement. On retient donc 5 classes, qui retracent près de 60% de la variance totale des quatre variables.
+
+```{r}
+cl <- lst_km[[5]]$cluster
+cl <- data.frame(codgeo=names(cl),cl)
+mapCl <- merge (map,cl,by.x="codgeo",by.y="codgeo",all.x=T)
+col <- carto.pal(n1 = nlevels(as.factor(mapCl$cl)),pal1="multi.pal")
+typoLayer(mapCl,var="cl",border=NA,legend.title.txt = "Cluster",col=col)
+dat <- merge(coord,cl,by.x="codgeo",by.y="codgeo") %>%
+        mutate(classe=as.factor(cl)) %>%
+        group_by(classe) %>%
+        summarise(Dim.1=mean(Dim.1),Dim.2=mean(Dim.2),Dim.3=mean(Dim.3),Dim.4=mean(Dim.4),communes=n())
+#        summarise_all(funs(moy=mean,et=sd)) Si on veut plusieurs stats pour toutes les variables
+ggplot(dat,aes(Dim.1,Dim.2,color=classe,size=communes)) + 
+    geom_point() + scale_size(range = c(4,15)) +
+    geom_vline(xintercept = 0) + geom_hline(yintercept = 0) 
+ggplot(dat,aes(Dim.3,Dim.4,color=classe,size=communes)) + 
+    geom_point() + scale_size(range = c(4,15)) +
+    geom_vline(xintercept = 0) + geom_hline(yintercept = 0) 
+
+```
+

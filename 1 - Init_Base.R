@@ -80,8 +80,8 @@ contig <- st_intersects(mapCom,mapCom)
 #contig <- poly2nb(mapCom,row.names = mapCom$INSEE_COM,queen = T)
 
 # Vérification de la contiguité
-plot(mapCom[contig[[1]],3],col="blue")
-plot(mapCom[contig[[1]][[1]],3],col="black",add=T)
+plot(mapCom[contig[[1]],1],col="blue")
+plot(mapCom[contig[[1]][[1]],1],col="black",add=T)
 
 # On va transformer la liste en dataframe à 2 colonnes avec chaque couple de communes contigues
 couples <- data.frame()
