@@ -14,7 +14,7 @@ require(keras)
 
 load("Base.RData")
 table(base$y)
-dat <- base
+dat <- baseML
 summary(dat)
 
 ## On ne va prendre qu'un nombre restreint de ligne (tirées au hasard mais en gardant la proportion de fusion identique)

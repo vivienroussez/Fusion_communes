@@ -35,5 +35,5 @@ dat <- cbind(fact,num) %>%
   select(-ident,-first,-second,-starts_with("fusion"))
 row.names(dat) <- fact$ident
 
-base <- dat
-save(base,mapCom,couples,file="Base.RData")
+baseML <- dat
+save(base,baseML,mapCom,couples,file="Base.RData")
