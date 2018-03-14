@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Prévoir les fusions de communes</title>
+  <meta name="description" content="Rapport pour la formation du CEPE en datascience">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Prévoir les fusions de communes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Rapport pour la formation du CEPE en datascience" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Prévoir les fusions de communes" />
+  
+  <meta name="twitter:description" content="Rapport pour la formation du CEPE en datascience" />
+  
+
+<meta name="author" content="Groupe des gauchistes">
+
+
+<meta name="date" content="2018-03-14">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="un-proxy-de-la-couleur-politique-dune-commune.html">
+<link rel="next" href="analyse-factorielle-des-resultats.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Prévoir les fusions de communes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="un-proxy-de-la-couleur-politique-dune-commune.html"><a href="un-proxy-de-la-couleur-politique-dune-commune.html"><i class="fa fa-check"></i><b>2</b> Un proxy de la couleur politique d’une commune</a></li>
+<li class="chapter" data-level="3" data-path="preparation-des-donnees.html"><a href="preparation-des-donnees.html"><i class="fa fa-check"></i><b>3</b> Préparation des données</a></li>
+<li class="chapter" data-level="4" data-path="analyse-factorielle-des-resultats.html"><a href="analyse-factorielle-des-resultats.html"><i class="fa fa-check"></i><b>4</b> Analyse factorielle des résultats</a></li>
+<li class="chapter" data-level="5" data-path="synthese-typologie-communale.html"><a href="synthese-typologie-communale.html"><i class="fa fa-check"></i><b>5</b> Synthèse : typologie communale</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Prévoir les fusions de communes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="preparation-des-donnees" class="section level1">
+<h1><span class="header-section-number">Chapitre 3</span> Préparation des données</h1>
+<p>Avant de démarrer, il faut installer le package COGugaison, qui permet de passer facilement d’un millésime de géographique comunale à un autre. On charge en plus les packages du tidyverse, FactoMineR pour l’analyse des données, et sf pour la gestion des données géographiques. On charge également le fonds de carte communale de l’IGN. Pour le fonds de carte, il faut passer des arrondissements (Paris, Lyon, Marseille) à la commune (on ne dispose pas des informations à l’arrondissement dans la plupart des cas)</p>
+<pre><code>## Reading layer `COMMUNE&#39; from data source `/Volumes/BIGUSB/Datascience/Projet/Fusion_communes/Sources/COMMUNE.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 36571 features and 18 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: 99217.1 ymin: 6049646 xmax: 1242417 ymax: 7110480
+## epsg (SRID):    NA
+## proj4string:    +proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs</code></pre>
+<p>Les données initiales se présentent comme un fichier de 36000 lignes avec pour chaque candidats 7 colonnes donnant notamment le nom, prénom, nombre de voix et les pourcentages correspondants. Le premier travail consiste à passer de ce format “large” inexploitable à un format “long” qui aura un ligne pour chaque croisement commune*candidat avec en colonne le nombre de voix. On gère également le millésime du COG en se ramenant au COG2015 comme pour les autres variables que l’on ajoute par la suite.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="un-proxy-de-la-couleur-politique-dune-commune.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analyse-factorielle-des-resultats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
