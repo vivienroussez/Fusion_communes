@@ -20,6 +20,7 @@ content <- paste(sep = "<br/>",
                  "Seattle, WA 98138"
 )
 
+
 data("cars")
 
 tab <- cars
@@ -36,7 +37,7 @@ ui <- dashboardPage(
           menuItem("Analyse Descriptive", tabName = "dashboard1", icon = icon("dashboard")),
           menuItem("Modélisation", tabName = "dashboard2", icon = icon("dashboard")),
           menuItem("Validation croisée", tabName = "dashboard3", icon = icon("dashboard")),
-          menuItem("Tableau comparatif des models", tabName = "dashboard4", icon = icon("dashboard"))
+          menuItem("Tableau comparatif des modèles", tabName = "dashboard4", icon = icon("dashboard"))
       
     )),
 
@@ -78,11 +79,12 @@ ui <- dashboardPage(
             # First tab content
             tabItem(tabName = "dashboard1",
                     fluidRow(
-                      box(plotOutput("plot1", height = 250)),
-                      
+                      plotOutput("plot1", height = 400, width="100%")),
+                    fluidRow(
                       box(
-                        title = "Controls",
-                        sliderInput("slider", "Number of observations:", 1, 100, 50)
+                        title = "Controls",width = 700,height = 300,
+                        selectInput("choix", "Variable:",c("ellipse","circle","pie"))
+                        
                       )
                     )
             ),
@@ -155,24 +157,26 @@ server <- function(input, output) {
   histdata <- rnorm(500)
   # 0 tab content*********************************************
   output$L1<-renderText({
-    "La fusion de communes est l’unification en une seule commune de plusieurs communes 
-    jusqu’alors distinctes. La procédure de fusion fait l’objet des articles L. 2113-1 à L. 2113-5,
+    "La fusion de communes est l'unification en une seule commune de plusieurs communes 
+    jusqu'alors distinctes. La procédure de fusion fait l'objet des articles L. 2113-1 à L. 2113-5,
     L. 2113-9, L. 2113-11 et L. 2113-12 du Code général des collectivités territoriales (CGCT)."
   })
   output$L2<-renderText({
-    "La fusion de communes ne peut intervenir qu’entre communes limitrophes et entraîne la disparition de la personnalité 
-     morale de l’ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
+    "La fusion de communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
+     morale de l'ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
   })
   
   
   # First tab content*********************************************
   output$plot1 <- renderPlot({
-    data <- histdata[seq_len(input$slider)]
-    hist(data) })
+    
+    corrplot(dat1_cor, method = input$choix)
+     })
   # Second tab content*********************************************  
   output$ZONE2 <- renderPlot({
     data <- histdata[1:input$slider2]
-    plot(data) })
+    plot(data)
+    })
   # Third tab content*********************************************
   output$ZONE3BOX1 <- renderPlot({
     data <- histdata[1:40]
