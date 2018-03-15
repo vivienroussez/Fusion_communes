@@ -76,7 +76,8 @@ couples_ebh$fusion <- couples_ebh$fusion_2015+couples_ebh$fusion_2016
 #subset(couples_ebh,fusion>=1)
 #couples_ebh <- group_by(couples_ebh,ident) %>% summarise(fusion=sum(fusion))
 doublons <- which(duplicated(couples_ebh$ident))
-couples_ebh_uniques <- couples_ebh[-doublons,]
+couples_ebh_uniques <- couples_ebh[-doublons,] %>%
+    select(ident,starts_with("fusion"))
 #sum(couples_ebh_uniques$fusion)
 
 base <- merge(base,couples_ebh_uniques,by.x="ident",by.y="ident",all.x=T)

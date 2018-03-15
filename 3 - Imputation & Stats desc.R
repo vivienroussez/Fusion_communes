@@ -96,9 +96,9 @@ cor(num)
 #acp <- PCA(num)
 
 dat <- cbind(fact,num) %>% 
-  mutate(y=as.factor(fusion/2)) %>%
-  select(-ident,-first,-second,-fusion)
+  mutate(y=as.factor(fusion)) %>%
+  select(-ident,-first,-second,-starts_with("fusion"))
 row.names(dat) <- fact$ident
 
-base <- dat
-#save(base,mapCom,couples,file="Base.RData")
+baseML <- dat
+save(base,baseML,mapCom,couples,file="Base.RData")

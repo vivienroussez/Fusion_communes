@@ -1,0 +1,60 @@
+
+## Synthèse : Dictionnaire des variables
+
+La base compte au final 48 variables :
+
+```{r}
+names(base)
+```
+
+Le préfixe "dist_" indique qu'il s'agit d'un indicateur de dissimilarité. Le préfixe "nb_" indique qu'il s'agit d'un indicateur de flux. Les variables non préfixées sont les variables binaires d'appartenance géographique.
+
+
+- P13_POP : Population en 2013
+- P09_POP : Population en 2009
+- SUPERF : Superficie (en km2)
+- NAIS0913 : Nombre de naissances entre le 01/01/2009 et le 01/01/2013
+- DECE0913 : Nombre de décès entre le 01/01/2009 et le 01/01/2013
+- P13_MEN : Nombre de ménages en 2013
+- NAISD15 : Nombre de naissances domiciliées en 2015
+- DECESD15 : Nombre de décès domiciliés en 2015
+- P13_LOG : Nombre de logements en 2013
+- P13_RP : Nombre de résidences principales en 2013
+- P13_RSECOCC : Nombre de résidences secondaires et logements occasionnels en 2013
+- P13_LOGVAC : Nombre de logements vacants en 2013
+- P13_RP_PROP : Nombre de résidences principales occupées par propriétaires en 2013
+- NBMENFISC14 : Nombre de ménages fiscaux en 2013
+- PIMP13 : Part des ménages fiscaux imposés en 2013
+- MED14 : Médiane du niveau de vie en 2013
+- TP6014 : Taux de pauvreté en 2013
+- P13_EMPLT : Nombre d'emplois au lieu de travail en 2013
+- P13_EMPLT_SAL : Nombre d'emplois salariés au lieu de travail en 2013
+- P09_EMPLT : Nombre d'emplois au lieu de travail en 2009
+- P13_POP1564 : Nombre de personnes de 15 à 64 ans en 2013
+- P13_CHOM1564 : Nombre de chômeurs de 15 à 64 ans en 2013
+- P13_ACT1564 : Nombre de personnes actives de 15 à 64 ans en 2013
+- ETTOT14 : Total des établissements actifs au 31 décembre 2014
+- ETAZ14 : Etablissements actifs de l'agriculture, sylviculture et pêche au 31/12/2014
+- ETBE14 : Etablissements actifs de l'industrie au 31/12/2014
+- ETFZ14 : Etablissements actifs de la construction au 31/12/2014
+- ETGU14 : Etablissements actifs du commerce, transports et services divers au 31/12/2014
+- ETGZ14 : Etablissements actifs du commerce et réparation automobile au 31/12/2014
+- ETOQ14 : Etablissements actifs de l'administration publique, enseignement, santé et action sociale au 31/12/2014
+- ETTEF114 : Etablissements actifs de 1 à 9 salariés au 31 décembre 2014
+- ETTEFP1014 : Etablissements actifs de 10 salariés ou plus au 31 décembre 2014
+- revmoy : Revenu médian par unité de consommation
+- pot_fin : Potentiel financier de la commune (ressources fiscal si elle applique les taux de prélèvement moyens)
+- Pol1 : Premier axe facttoriel de l'AFC sur les résultats électoraux (présidentielles 2017, tour 1)
+- Pol2 : Deuxième axe facttoriel de l'AFC sur les résultats électoraux (présidentielles 2017, tour 1)
+- RS : nombre de résidences secondaires de la commune A détenus par un propriétaire de la commune B (et réciproquement)
+- loc_prop : nombre de logements loués de la commune A détenus par un propriétaire de la commune B (et réciproquement)
+- mig : nombre de migrations résidentielles (déménagements) de la commune A vers la commune B (et réciproquement)
+- navettes : nombre de déplacements domicile-travail de la commune A vers la commune B (et réciproquement)
+- dep : appartenance au même département
+- ze : appartenance à la même zone d'emploi
+- bv : appartenance au même bassin de vie 
+- au : appartenance à la même aire urbaine
+- epci2014 : appartenance au même EPCI (contour 2014)
+- epci2016 : appartenance au même EPCI (contour 2016)
+- scot : appartenance au même SCOT (schéma de cohérence territoriale)
+- plui : appartenance au même plan local d'urbanisme intercommunal
