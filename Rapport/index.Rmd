@@ -1,0 +1,40 @@
+--- 
+title: "Prévoir les fusions de communes"
+author: "Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Rapport pour la formation du CEPE en datascience"
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = F, message=F, error=F,warning=F,fig.width=6, fig.height=6)
+```
+
+<style> body {text-align: justify}  </style>
+
+# Introduction
+
+En 2015, le projet de loi sur l'amélioration de la commune nouvelle est adopté. La même année, la loi pour une Nouvelle Organisation territoriale de la République (Notr) renforce les compétences des Régions et établissement publics de coopération intercommunale (EPCI, soit les communautés d'agglomération, de communes, etc...). Ces mesures  interviennent dans un contexte de réformé territoriale visant à rationaliser les dotations de l'Etat afin d'augmenter la capacité des régions à entrer dans la compétition internationale, et de ernforcer la coopération entre communes afin de développer la mutualisation des services et réaliser des économies d'échelle.
+
+En plus de ces mesures, la loi concernant les communes nouvelles incite les communes, notamment les petites, à fusionner, avec une incitation fiscale assez forte : alors que les dotations baissent de façon génrale, les communes ayant fusionnée voient leurs dotations gelées pour 3 ans.
+
+
+De fait, on compte 36 517 communes en 2015, avant la promulgation de la loi
+
+```{r,echo=FALSE}
+require(tidyverse)
+require(spdep)
+require(sf)
+require(data.table)
+require(FactoMineR)
+require(parallel)
+load("../Base.RData")
+datacomm <- fread("../Sources/Base_communes.csv",sep=";",dec=",",colClasses = c("REG"="chr"))
+```
+
+

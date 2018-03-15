@@ -10,7 +10,10 @@ require(e1071) # SVM
 require(rpart) # arbres
 require(caret) # Package pour sélection de paramètre par CV
 require(parallel)
-require(keras)
+require(keras) # tensorFlow
+require(kernlab) # SVM
+#install_keras()
+
 
 load("Base.RData")
 table(base$y)
@@ -23,7 +26,7 @@ summary(dat)
 set.seed(1234)
 
 echant <- group_by(dat,y) %>%
-  sample_frac(.1) %>% 
+  sample_frac(.01) %>% 
   as.data.frame() ## Attention, bestglm ne passe pas si on laisse en tibble !!!
 
 row.names(echant) <- echant$ident
@@ -37,8 +40,8 @@ don <- echant
 # Création d'une fonction qui va implémenter les modèles pour chaque bloc de CV
 # On l'excutera en parallèle une fois calée
 
-predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bloc sur lequel faire la prév
-{
+# predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bloc sur lequel faire la prév
+# {
   train <- don[bloc!=bloc.actif,]
   test  <- don[bloc==bloc.actif,]
   
@@ -95,6 +98,7 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   names(rf.prev)[1] <- "FORET"
   
   ### SVM
+  
   best.svm <- tune(svm,y~.,data=train,kernel="linear",
                   ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
   summary(best.svm)
@@ -102,10 +106,23 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   #svm.mod <- svm(y~.,data=train,probability=T,cost=0.001)
   svm.prev <- predict(svm.mod,newdata=test,probability=T)
   
+  
+  # Réseaux de neurone
+  res
+  pourTF <- input_fn(y~dep+ze+bv+au+epci2014+epci2016+scot+plui+dist_P13_POP+dist_P08_POP+
+                        dist_SUPERF+dist_NAIS0813+dist_DECE0813+dist_P13_MEN+dist_P13_LOG+dist_P13_RP+
+                        dist_P13_RSECOCC+dist_P13_LOGVAC+dist_P13_RP_PROP+dist_P13_EMPLT+
+                        dist_P13_EMPLT_SAL+dist_P08_EMPLT+dist_P13_POP1564+dist_P13_CHOM1564+
+                        dist_P13_ACT1564+dist_ETTOT14+dist_ETAZ14+dist_ETFZ14+dist_ETGU14+
+                        dist_ETOQ14+dist_ETTEF114+dist_revmoy+dist_pot_fin+dist_Pol1+dist_Pol2+
+                        nb_locprop+nb_RS+nb_mig+nb_navettes,data=train,epochs=3)
+  
+  
+  
   res <- data.frame(Y=test$y,SVM=svm.prev,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,
                    ridge=ridge.prev)
   
-}
+# }
 
 predit(bloc.actif = 1,don=echant)
 
