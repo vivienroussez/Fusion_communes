@@ -36,8 +36,10 @@ library(corrplot)
 mat_cor<-select(dat1,starts_with("dist"),-dist_Pol1,-dist_Pol2)
 colnames(mat_cor)
 dat1_cor<-round(cor(mat_cor),2)
+corrplot(dat1_cor, method = "circle")
+corrplot(dat1_cor, method = "ellipse")
 corrplot(dat1_cor, method = "number")
-#on ne voit rien, je ne comprends pas pourquoi
+corrplot(dat1_cor, method = "pie")
 
 #je voudrais visualiser les vars dist + les vars nb en fonction de la fusion
 library(ggplot2)
@@ -45,21 +47,29 @@ lg<-sqrt(ncol(mat_cor))
 par(mfrow=c(lg,lg))
 ggplot(dat1,aes(x=fusion,y=dist_DECE0813))+geom_boxplot()
 ggplot(dat1,aes(x=fusion,y=dist_P13_POP))+geom_boxplot()
-
-
-
-
-"dist_P08_POP"       "dist_SUPERF"        "dist_NAIS0813"     
- [5] "dist_DECE0813"      "dist_P13_MEN"       "dist_P13_LOG"       "dist_P13_RP"       
- [9] "dist_P13_RSECOCC"   "dist_P13_LOGVAC"    "dist_P13_RP_PROP"   "dist_P13_EMPLT"    
-[13] "dist_P13_EMPLT_SAL" "dist_P08_EMPLT"     "dist_P13_POP1564"   "dist_P13_CHOM1564" 
-[17] "dist_P13_ACT1564"   "dist_ETTOT14"       "dist_ETAZ14"        "dist_ETFZ14"       
-[21] "dist_ETGU14"        "dist_ETOQ14"        "dist_ETTEF114"      "dist_revmoy"       
-[25] "dist_pot_fin"
-
-colnames(mat_cor)
-
-
+ggplot(dat1,aes(x=fusion,y=dist_P08_POP))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_SUPERF))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_NAIS0813))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_MEN))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_LOG))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_RP))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_RSECOCC))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_LOGVAC))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_RP_PROP))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_EMPLT))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_EMPLT_SAL))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P08_EMPLT))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_POP1564))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_CHOM1564))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_P13_ACT1564))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_ETTOT14))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_ETAZ14))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_ETFZ14))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_ETGU14))+geom_boxplot()
+ggplot(dat1,aes(x=fusion,y=dist_ETOQ14))+geom_boxplot() 
+ggplot(dat1,aes(x=fusion,y=dist_ETTEF114))+geom_boxplot() 
+ggplot(dat1,aes(x=fusion,y=dist_revmoy))+geom_boxplot() 
+ggplot(dat1,aes(x=fusion,y=dist_pot_fin))+geom_boxplot() 
 
 
 
