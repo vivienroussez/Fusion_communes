@@ -37,7 +37,7 @@ ui <- dashboardPage(
           menuItem("Analyse Descriptive", tabName = "dashboard1", icon = icon("dashboard")),
           menuItem("Modélisation", tabName = "dashboard2", icon = icon("dashboard")),
           menuItem("Validation croisée", tabName = "dashboard3", icon = icon("dashboard")),
-          menuItem("Tableau comparatif des models", tabName = "dashboard4", icon = icon("dashboard"))
+          menuItem("Tableau comparatif des modèles", tabName = "dashboard4", icon = icon("dashboard"))
       
     )),
 
@@ -79,11 +79,12 @@ ui <- dashboardPage(
             # First tab content
             tabItem(tabName = "dashboard1",
                     fluidRow(
-                      box(plotOutput("plot1", height = 250)),
-                      
+                      plotOutput("plot1", height = 400, width="100%")),
+                    fluidRow(
                       box(
-                        title = "Controls",
-                        sliderInput("slider", "Number of observations:", 1, 100, 50)
+                        title = "Controls",width = 700,height = 300,
+                        selectInput("choix", "Variable:",c("ellipse","circle","pie"))
+                        
                       )
                     )
             ),
@@ -168,12 +169,14 @@ server <- function(input, output) {
   
   # First tab content*********************************************
   output$plot1 <- renderPlot({
-    data <- histdata[seq_len(input$slider)]
-    hist(data) })
+    
+    corrplot(dat1_cor, method = input$choix)
+     })
   # Second tab content*********************************************  
   output$ZONE2 <- renderPlot({
     data <- histdata[1:input$slider2]
-    plot(data) })
+    plot(data)
+    })
   # Third tab content*********************************************
   output$ZONE3BOX1 <- renderPlot({
     data <- histdata[1:40]
