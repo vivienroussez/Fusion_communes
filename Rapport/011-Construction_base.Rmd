@@ -1,0 +1,34 @@
+```{r}
+load("../Base.RData")
+```
+
+
+# Contitution de la base de données 
+
+Pour nourrir le modèle de machine learning, nous avons procédé en plusieurs étapes :
+
+- Identification des couples de communes contigües (seules susceptibles de fusionner)
+- Constitution d'indicateurs de dissimilarités pour chacun de ces couples
+    + Collecte d'indicateurs communaux donnant les caractéristiques démographiques, sociales, économiques des territoire
+    + Calcul de la distance euclidienne entre chacun des couples sur la base de chacun de ces indicateurs
+- Ajout d'indicateurs de **flux**, permettant de mesurer l'intensité des échanges (essentiellement de nature économique)
+- Ajout de variables binaires pour les couples appartenant à un même zonage administratif ou d'étude
+
+## Création des couples de communes
+
+Chaque ligne de la base de donnée représente un couple de communes contigües (c'est à dire qu'elle se touchent en au moins un point). La base est donc contstituée de deux colonnes "commune A " et "commune B" et on compte 218 000 couples, mais pour dans lesquels A,B et B,A forment deux lignes distinces. On crée donc un identifiant unique pour A,B et B,A pour n'avoir qu'une occurrence des couples dans la base. Il y a donc, au final, envrion 109 000 lignes dans la base.
+
+```{r}
+head(couples)
+```
+
+On s'assure
+
+## Indicateurs communaux mobilisés
+
+Pour déterminer les caractéristiques des communes (et ensuite déterminer si elles sont très différentes ou homogènes), nous avons utilisé la base "comparateur de de territoires" fournie par l'Insee. Celle-ci constitue une synthèses de diverses sources de données (recensement de la population, Connaissance locale de l'appareil production, fichiers d'état civil, fichiers fiscaux...). 
+
+
+## Indicateurs de flux
+
+## Appartenance à un même périmètre

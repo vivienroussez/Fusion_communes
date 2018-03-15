@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="Rapport pour la formation du CEPE en datascience" />
   
 
-<meta name="author" content="Groupe des gauchistes">
+<meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine">
 
 
-<meta name="date" content="2018-03-14">
+<meta name="date" content="2018-03-15">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="un-proxy-de-la-couleur-politique-dune-commune.html">
+<link rel="next" href="contitution-de-la-base-de-donnees.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -67,10 +67,19 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="un-proxy-de-la-couleur-politique-dune-commune.html"><a href="un-proxy-de-la-couleur-politique-dune-commune.html"><i class="fa fa-check"></i><b>2</b> Un proxy de la couleur politique d’une commune</a></li>
-<li class="chapter" data-level="3" data-path="preparation-des-donnees.html"><a href="preparation-des-donnees.html"><i class="fa fa-check"></i><b>3</b> Préparation des données</a></li>
-<li class="chapter" data-level="4" data-path="analyse-factorielle-des-resultats.html"><a href="analyse-factorielle-des-resultats.html"><i class="fa fa-check"></i><b>4</b> Analyse factorielle des résultats</a></li>
-<li class="chapter" data-level="5" data-path="synthese-typologie-communale.html"><a href="synthese-typologie-communale.html"><i class="fa fa-check"></i><b>5</b> Synthèse : typologie communale</a></li>
+<li class="chapter" data-level="2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html"><i class="fa fa-check"></i><b>2</b> Contitution de la base de données</a><ul>
+<li class="chapter" data-level="2.1" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#creation-des-couples-de-communes"><i class="fa fa-check"></i><b>2.1</b> Création des couples de communes</a></li>
+<li class="chapter" data-level="2.2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#indicateurs-communaux-mobilises"><i class="fa fa-check"></i><b>2.2</b> Indicateurs communaux mobilisés</a></li>
+<li class="chapter" data-level="2.3" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#indicateurs-de-flux"><i class="fa fa-check"></i><b>2.3</b> Indicateurs de flux</a></li>
+<li class="chapter" data-level="2.4" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#appartenance-a-un-meme-perimetre"><i class="fa fa-check"></i><b>2.4</b> Appartenance à un même périmètre</a></li>
+<li class="chapter" data-level="2.5" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#determination-de-la-couleur-politique-des-communes"><i class="fa fa-check"></i><b>2.5</b> Détermination de la couleur politique des communes</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#un-proxy-de-la-couleur-politique-dune-commune"><i class="fa fa-check"></i><b>2.5.1</b> Un proxy de la couleur politique d’une commune</a></li>
+<li class="chapter" data-level="2.5.2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#preparation-des-donnees"><i class="fa fa-check"></i><b>2.5.2</b> Préparation des données</a></li>
+<li class="chapter" data-level="2.5.3" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#analyse-factorielle-des-resultats"><i class="fa fa-check"></i><b>2.5.3</b> Analyse factorielle des résultats</a></li>
+<li class="chapter" data-level="2.5.4" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-typologie-communale"><i class="fa fa-check"></i><b>2.5.4</b> Synthèse : typologie communale</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-dictionnaire-des-variables"><i class="fa fa-check"></i><b>2.6</b> Synthèse : Dictionnaire des variables</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -92,8 +101,8 @@
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Prévoir les fusions de communes</h1>
-<h4 class="author"><em>Groupe des gauchistes</em></h4>
-<h4 class="date"><em>2018-03-14</em></h4>
+<h4 class="author"><em>Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine</em></h4>
+<h4 class="date"><em>2018-03-15</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapitre 1</span> Introduction</h1>
@@ -101,7 +110,6 @@
 <p>En plus de ces mesures, la loi concernant les communes nouvelles incite les communes, notamment les petites, à fusionner, avec une incitation fiscale assez forte : alors que les dotations baissent de façon génrale, les communes ayant fusionnée voient leurs dotations gelées pour 3 ans.</p>
 <p>De fait, on compte 36 517 communes en 2015, avant la promulgation de la loi</p>
 
-<style> body {text-align: justify}  </style>
 </div>
             </section>
 
@@ -109,7 +117,7 @@
         </div>
       </div>
 
-<a href="un-proxy-de-la-couleur-politique-dune-commune.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="contitution-de-la-base-de-donnees.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
