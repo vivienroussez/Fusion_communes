@@ -10,13 +10,17 @@ require(e1071) # SVM
 require(rpart) # arbres
 require(caret) # Package pour sélection de paramètre par CV
 require(parallel)
-require(keras) # tensorFlow
+require(foreach)
+require(doParallel)
+require(tfestimators) # tensorFlow
+require(keras)
 require(kernlab) # SVM
 #install_keras()
 
 
 load("Base.RData")
-table(base$y)
+base <- rename(base,y=fusion)
+table(baseML$y)
 dat <- baseML
 summary(dat)
 
@@ -31,19 +35,41 @@ echant <- group_by(dat,y) %>%
 
 row.names(echant) <- echant$ident
 
-nbloc <- 12 # parce ce que j'ai 4 coeurs et on va faire les simul sur 3
-bloc <- sample(1:nrow(echant)%%(nbloc+1))
+nbloc <- 12 # parce ce que j'ai 4 coeurs et on va faire les simul sur 3. Sur le serveur il y a 8 coeurs
+            # donc on fait 21 blocs (qui est le ppmc(7,3))
 
-bloc.actif <- 1  
-don <- echant
+
+# bloc.actif <- 1  
+don <- dat
+bloc <- sample(1:nrow(don)%%(nbloc+1))
+
+
+### Mise en forme des données pour tensorflow
+# On transforme les var quali en dummies
+dummies <- select_if(don,is.factor) %>%
+  select(-y) %>%
+  mutate_all(function(x) as.numeric(as.character(x))) %>%
+  as.data.frame()
+# On normalise les variables continues
+num <- select_if(don,is.numeric) %>%
+  scale %>% 
+  as.data.frame()
+
+feat <- cbind(dummies,num)
+resp <- select(don,y) 
+don.nn <- cbind(feat,resp)
 
 # Création d'une fonction qui va implémenter les modèles pour chaque bloc de CV
 # On l'excutera en parallèle une fois calée
 
-# predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bloc sur lequel faire la prév
-# {
+predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bloc sur lequel faire la prév
+{
+  print(bloc.actif)
   train <- don[bloc!=bloc.actif,]
   test  <- don[bloc==bloc.actif,]
+  
+  train.nn <- don.nn[bloc!=bloc.actif,]
+  test.nn <- don.nn[bloc==bloc.actif,]
   
   XX <- model.matrix(y~.,data=train)
   YY <- train$y
@@ -99,38 +125,54 @@ don <- echant
   
   ### SVM
   
-  best.svm <- tune(svm,y~.,data=train,kernel="linear",
-                  ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
-  summary(best.svm)
-  svm.mod <- best.svm$best.model
-  #svm.mod <- svm(y~.,data=train,probability=T,cost=0.001)
-  svm.prev <- predict(svm.mod,newdata=test,probability=T)
+  # best.svm <- tune(svm,y~.,data=train,kernel="linear",
+  #                 ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
+  # summary(best.svm)
+  # svm.mod <- best.svm$best.model
+  # svm.prev <- predict(svm.mod,newdata=test,probability=T)
   
   
   # Réseaux de neurone
-  res
-  pourTF <- input_fn(y~dep+ze+bv+au+epci2014+epci2016+scot+plui+dist_P13_POP+dist_P08_POP+
-                        dist_SUPERF+dist_NAIS0813+dist_DECE0813+dist_P13_MEN+dist_P13_LOG+dist_P13_RP+
-                        dist_P13_RSECOCC+dist_P13_LOGVAC+dist_P13_RP_PROP+dist_P13_EMPLT+
-                        dist_P13_EMPLT_SAL+dist_P08_EMPLT+dist_P13_POP1564+dist_P13_CHOM1564+
-                        dist_P13_ACT1564+dist_ETTOT14+dist_ETAZ14+dist_ETFZ14+dist_ETGU14+
-                        dist_ETOQ14+dist_ETTEF114+dist_revmoy+dist_pot_fin+dist_Pol1+dist_Pol2+
-                        nb_locprop+nb_RS+nb_mig+nb_navettes,data=train,epochs=3)
+  response <- function() "y"
+  features <- function() names(select(train.nn,-y))
   
+  feature_columns <- feature_columns(column_numeric(features()))
   
+  classifier <- dnn_classifier(
+    feature_columns = feature_columns,
+    hidden_units = c(10, 20, 10),
+    n_classes = 2
+  )
+  DNN_input_fn <- function(data) {
+    input_fn(data, features = features(), response = response())
+  }
   
-  res <- data.frame(Y=test$y,SVM=svm.prev,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,
-                   ridge=ridge.prev)
+  train(classifier, input_fn = DNN_input_fn(train.nn))
+  nn.prev <- predict(classifier, input_fn = DNN_input_fn(test.nn),predict_keys="probabilities")
+  nn.prev <- sapply(nn.prev$probabilities,function(x) x[2])
+  nn.eval <- evaluate(classifier, input_fn = DNN_input_fn(test.nn))
+
   
-# }
+  res <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
+                   DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
+  return(res)
+  
+}
+#,SVM=svm.prev
+# system.time(
+#   toto <- predit(bloc.actif = 1,don=don)
+# )
 
-predit(bloc.actif = 1,don=echant)
+cl <- makeCluster(detectCores()-1) # ouverture du cluster
+registerDoParallel(cl)
 
+# Exécution en parallèle
 
-logi  <- glm(y~.,family = binomial,data=echant)
-bestlog <- step(logi)
-bestlog2 <- bestglm(echant,family = binomial)
+system.time(
+  prev <- foreach(ii=1:nbloc,.export = c("predit"), 
+                .packages = c("dplyr","gbm","tfestimators","e1071","randomForest","rpart","glmnet"))  %dopar%
+      predit(bloc.actif = ii,don=don)
+)
 
-
-
-
+stopCluster(cl) # arrêt du cluster
+prev.data <- bind_rows(prev)
