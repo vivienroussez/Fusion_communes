@@ -55,7 +55,9 @@ polit <- read.csv2("Sources/Synthese_pol.csv")
 datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             merge(revenus,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             merge(potfi,by.x="CODGEO",by.y="com",all.x=T) %>%
-            merge(polit,by.x="CODGEO",by.y="codgeo",all.x=T)
+            mutate(evol_pop=P13_POP/P08_POP,densite=P13_POP/SUPERF,evol_nais=NAISD15/NAIS0813,evol_dec=DECESD15/DECE0813,
+                   evol_empl=P13_EMPLT/P08_EMPLT) %>%
+            select(-P08_POP,-NAIS0813,-DECE0813,-P08_EMPLT)
 
                           ###############################################
                           ### Créations des couples de comm contigues ###
@@ -103,7 +105,7 @@ uniques <- couples[-doublons,]
 
                           
                           #########################################
-                          ### Ajour des indicateurs de distance ###
+                          ### Ajout des indicateurs de distance ###
                           #########################################
 
 

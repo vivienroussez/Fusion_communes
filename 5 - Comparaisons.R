@@ -3,7 +3,6 @@ require(sf)
 require(pROC)
 require(data.table)
 require(caret)
-require(GGally)
 
 prev <- fread("PrevML.csv",sep=";",dec=',')[,-1] %>% as.data.frame() %>%
       mutate(Y=as.factor(Y))
