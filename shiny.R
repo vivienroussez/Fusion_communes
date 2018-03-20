@@ -6,7 +6,7 @@
 #
 #    http://shiny.rstudio.com/
 #
-
+install.packages("mapview")
 library(shiny)
 library(leaflet)
 library(shinydashboard)
