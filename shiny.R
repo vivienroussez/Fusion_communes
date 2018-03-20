@@ -6,7 +6,9 @@
 #
 #    http://shiny.rstudio.com/
 #
-install.packages("mapview")
+# install.packages("mapview")
+# install.packages("leaflet")
+# install.packages("sf")
 library(shiny)
 library(leaflet)
 library(shinydashboard)
@@ -15,13 +17,20 @@ library(rgdal)
 library(corrplot)
 library(mapview)
 library(sf)
-Carte<-mapview(mapCom, col.regions = sf.colors(36000))
 
-content <- paste(sep = "<br/>",
-                 "<b><a href='http://www.samurainoodle.com'>Samurai Noodle</a></b>",
-                 "606 5th Ave. S",
-                 "Seattle, WA 98138"
-)
+## les données shiny
+#ROC
+par(mfrow=c(3,3))
+
+for (ii in 1:length(prev.roc))
+{ 
+  plot(prev.roc[[ii]],main=c(names(prev.conf)[ii],paste("AUC = ",round(prev.roc[[ii]]$auc,3),sep="") ))
+  
+}
+# CARTE
+Carte<-mapview(com, col.regions = sf.colors(36000))
+
+
 
 
 data("cars")
@@ -92,20 +101,25 @@ ui <- dashboardPage(
                     )
             ),
           # Second tab content*********************************************
-          tabItem(tabName = "dashboard2",
-                  box(
-                    title = "Histogram", status = "primary", solidHeader = TRUE,
-                    collapsible = TRUE,
-                    plotOutput("ZONE2", height = 250)
-                  ),
-                  
-                  box(
-                    title = "Inputs", status = "warning", solidHeader = TRUE,
-                    "Box content here", br(), "More box content",
-                    sliderInput("slider2", "Slider input:", 1, 100, 50),
-                    textInput("text", "Text input:")
-                  )
-          ),
+            tabItem(tabName = "dashboard2",
+                    # pour la petite histoire
+                    
+                    fluidRow(
+                      tabBox(
+                        height = "500px",
+                        width = "500px",
+                        selected = "Tab3",
+                        tabPanel("Graphe du seuil", "Note that when side=right, the tab order is reversed."),
+                        tabPanel("Matrice de Confusion", "Tab content 2"),
+                        tabPanel("Courbe ROC", plotOutput("ZONE6"))
+                      )
+                    )#fin fluidRow
+                    
+                    
+                    ),
+                        
+                      
+          
           # third tab content*********************************************
           tabItem(tabName = "dashboard3",
                   fluidRow(
@@ -177,10 +191,20 @@ server <- function(input, output) {
     corrplot(dat1_cor, method = input$choix)
      })
   # Second tab content*********************************************  
-  output$ZONE2 <- renderPlot({
-    data <- histdata[1:input$slider2]
-    plot(data)
-    })
+  output$ZONE6 <- renderPlot({
+    par(mfrow=c(3,3))
+    
+    for (ii in 1:length(prev.roc))
+    { 
+      plot(prev.roc[[ii]],main=c(names(prev.conf)[ii],paste("AUC = ",round(prev.roc[[ii]]$auc,3),sep="") ))
+      
+    } 
+    
+  })
+  # output$ZONE2 <- renderPlot({
+  #   data <- histdata[1:input$slider2]
+  #   plot(data)
+  #   })
   # Third tab content*********************************************
   output$ZONE3BOX1 <- renderPlot({
     data <- histdata[1:40]
