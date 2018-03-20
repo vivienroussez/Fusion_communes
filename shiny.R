@@ -12,7 +12,10 @@ library(leaflet)
 library(shinydashboard)
 library(htmltools)
 library(rgdal)
-
+library(corrplot)
+library(mapview)
+library(sf)
+Carte<-mapview(mapCom, col.regions = sf.colors(36000))
 
 content <- paste(sep = "<br/>",
                  "<b><a href='http://www.samurainoodle.com'>Samurai Noodle</a></b>",
@@ -141,8 +144,9 @@ ui <- dashboardPage(
                   )
           ),
           # fourth tab content *********************************************
-          tabItem(tabName = "dashboard4",
-              leafletOutput("ZONE4")
+          tabItem(tabName = "dashboard4",mapviewOutput("ZONE4", width = "100%", height = 400
+)
+             # leafletOutput("ZONE4")
                 
           )
         )
@@ -162,7 +166,7 @@ server <- function(input, output) {
     L. 2113-9, L. 2113-11 et L. 2113-12 du Code général des collectivités territoriales (CGCT)."
   })
   output$L2<-renderText({
-    "La fusion de communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
+    "La fusion de() communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
      morale de l'ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
   })
   
@@ -182,11 +186,15 @@ server <- function(input, output) {
     data <- histdata[1:40]
     plot.design(data=tab,speed~dist,ylab = "speed",xlab = "dist", title="graphe plot") })
   # Forth tab content*********************************************
-  output$ZONE4 <- renderLeaflet({
-    m <- leaflet() %>%
-    addTiles() %>%  # Add default OpenStreetMap map tiles
-    addMarkers(lng=174.768, lat=-36.852, label="test") %>%
-      addPopups(174.768, -36.852, content,options = popupOptions(closeButton = TRUE))
+  output$ZONE4 <- renderMapview({
+     Carte 
+    
+    #mapview(mapCom, col.regions = sf.colors(109000))
+    
+    #m <- leaflet() %>%
+    #addTiles() %>%  # Add default OpenStreetMap map tiles
+    #addMarkers(lng=174.768, lat=-36.852, label="test") %>%
+     # addPopups(174.768, -36.852, content,options = popupOptions(closeButton = TRUE))
 })}
 
 # Run the application 
