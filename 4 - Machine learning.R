@@ -123,14 +123,21 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   rf.prev <- predict(rf,newdata = test,type = "prob")[,2] %>% as.data.frame()
   names(rf.prev)[1] <- "FORET"
   
-  ### SVM
+  ### SVM linéaire
+  best.svm <- tune(svm,y~.,data=train,kernel="linear",
+                  ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
+  summary(best.svm$best.model)
+  svm.mod <- best.svm$best.model
+  svm.prev <- predict(svm.mod,newdata=test,probability=T)
   
-  # best.svm <- tune(svm,y~.,data=train,kernel="linear",
-  #                 ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
-  # summary(best.svm)
-  # svm.mod <- best.svm$best.model
-  # svm.prev <- predict(svm.mod,newdata=test,probability=T)
-  
+
+  ### SVM avec kernel radial
+  best.svm.rad <- tune(svm,y~.,data=train,kernel="radial",
+                   ranges=list(cost=c(0.001,0.01,1,10,100,1000)),probability=T)
+  summary(best.svm.rad$best.model)
+  svm.mod.rad <- best.svm.rad$best.model
+  svm.prev.rad <- predict(svm.mod.rad,newdata=test,decision.values=T,probabilities=T)
+  svm.prev.rad <- attr(svm.prev.rad,"decision.values")
   
   # Réseaux de neurone
   response <- function() "y"
@@ -153,8 +160,11 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   nn.eval <- evaluate(classifier, input_fn = DNN_input_fn(test.nn))
 
   
-  res <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
+  prev <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
                    DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
+  
+  modeles <- list(MCO=mco,MCO.step=mco.step,RIDGE=ridge,LASSO=lasso,ELAST=elastic,ARBRE=arbre,BOOST=ada,FORET=rf,DNN=nn.eval)
+  res <- list(prev=prev,modeles=modeles)
   return(res)
   
 }
