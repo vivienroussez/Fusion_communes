@@ -163,8 +163,8 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   prev <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
                    DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
   
-  modeles <- list(MCO=mco,MCO.step=mco.step,RIDGE=ridge,LASSO=lasso,ELAST=elastic,ARBRE=arbre,BOOST=ada,FORET=rf,DNN=nn.eval)
-  res <- list(prev=prev,modeles=modeles)
+  # modeles <- list(MCO=mco,MCO.step=mco.step,RIDGE=ridge,LASSO=lasso,ELAST=elastic,ARBRE=arbre,BOOST=ada,FORET=rf,DNN=nn.eval)
+  res <- prev
   return(res)
   
 }

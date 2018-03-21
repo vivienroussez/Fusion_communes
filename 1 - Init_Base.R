@@ -66,6 +66,9 @@ datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
 mapCom <- select(mapCom,-ID_GEOFLA, -starts_with("CODE"), -POPULATION,-starts_with("NOM")) %>%
           mutate(codgeo=recode_arrond(INSEE_COM)) %>%
           group_by(codgeo) %>% summarise()
+
+mapCom <- merge(mapCom,datacomm,by.x="codgeo",by.y="CODGEO",all.x=T)
+
 contig <- st_intersects(mapCom,mapCom) # Matrice de contiguité
 
 # On enlève le premier élément qui est la commune elle-même
