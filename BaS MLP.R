@@ -1,5 +1,5 @@
 require(tfestimators)
-
+require(keras)
 
 ### Ceci est le bas à sable qui a servi à
 ### tester le réseau de neurones avant de le mettre dans le prog principal

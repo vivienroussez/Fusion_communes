@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="Rapport pour la formation du CEPE en datascience" />
   
 
-<meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine">
+<meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-15">
+<meta name="date" content="2018-03-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,10 @@
 <li class="chapter" data-level="2.5.4" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-typologie-communale"><i class="fa fa-check"></i><b>2.5.4</b> Synthèse : typologie communale</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-dictionnaire-des-variables"><i class="fa fa-check"></i><b>2.6</b> Synthèse : Dictionnaire des variables</a></li>
+<li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
+<li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>3</b> Modélisation de la probabilité de fusionner</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -101,14 +104,14 @@
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Prévoir les fusions de communes</h1>
-<h4 class="author"><em>Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine</em></h4>
-<h4 class="date"><em>2018-03-15</em></h4>
+<h4 class="author"><em>Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les <strong>datagourdes</strong></em></h4>
+<h4 class="date"><em>2018-03-22</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapitre 1</span> Introduction</h1>
 <p>En 2015, le projet de loi sur l’amélioration de la commune nouvelle est adopté. La même année, la loi pour une Nouvelle Organisation territoriale de la République (Notr) renforce les compétences des Régions et établissement publics de coopération intercommunale (EPCI, soit les communautés d’agglomération, de communes, etc…). Ces mesures interviennent dans un contexte de réformé territoriale visant à rationaliser les dotations de l’Etat afin d’augmenter la capacité des régions à entrer dans la compétition internationale, et de ernforcer la coopération entre communes afin de développer la mutualisation des services et réaliser des économies d’échelle.</p>
-<p>En plus de ces mesures, la loi concernant les communes nouvelles incite les communes, notamment les petites, à fusionner, avec une incitation fiscale assez forte : alors que les dotations baissent de façon génrale, les communes ayant fusionnée voient leurs dotations gelées pour 3 ans.</p>
-<p>De fait, on compte 36 517 communes en 2015, avant la promulgation de la loi</p>
+<p>Par ailleurs, la France, avec près de 36 800 communes en 2015, regroupe à elle seule un tiers des communes de l’Union européenne. La plupart sont très petites (voir shiny), ce qui limite de fait les capacités d’action. C’est pourquoi, en plus de la loi NOTR, une loi concernant les communes nouvelles a été adoptée en 2015, et incite les communes, notamment les petites, à fusionner, avec une incitation fiscale assez forte : alors que les dotations de l’Etat baissent de façon générale, les communes ayant fusionnée voient leurs dotations gelées pour 3 ans.</p>
+<p>Depuis l’adoption de cette loi, on comptabilise près de 1750 fusions de communes, ce qui représente une baisse significative du nombre de collectivité, même si cela reste relativement modeste par rapport à la baisse du nombre de municipalités dans les autres pays européens, amorcée dès 1950 (jusqu’à -92 % au Danemark !).</p>
 
 </div>
             </section>

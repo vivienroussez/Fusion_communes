@@ -62,4 +62,4 @@ Le préfixe "dist_" indique qu'il s'agit d'un indicateur de dissimilarité. Le p
 
 ## Imputations et corrections
 
-Afin d'avoir une base opérationnelle pour la partie statistiques descriptives et machine learning, nous avons enfin nettoyé les données : nous avons supprimé les variables pour lesquelles la part de données manquante était trop importante, imputé les valeurs manquantes par la moyenne pour les autres, et remplacé les distances "infinies" (causée par une valeur nulle d'un indicateur pour une commune) par le maximum observé sur les autres lignes.
+Afin d'avoir une base opérationnelle pour la partie statistiques descriptives et machine learning, nous avons enfin nettoyé les données : nous avons supprimé les variables pour lesquelles la part de données manquante était trop importante (>3%), imputé les valeurs manquantes par la moyenne, et remplacé les distances "infinies" (causée par une valeur nulle d'un indicateur pour une commune) par le maximum observé sur les autres lignes.

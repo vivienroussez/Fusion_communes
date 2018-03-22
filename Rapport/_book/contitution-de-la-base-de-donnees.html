@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="Rapport pour la formation du CEPE en datascience" />
   
 
-<meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine">
+<meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-15">
+<meta name="date" content="2018-03-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="index.html">
-
+<link rel="next" href="modelisation-de-la-probabilite-de-fusionner.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -79,7 +79,10 @@
 <li class="chapter" data-level="2.5.4" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-typologie-communale"><i class="fa fa-check"></i><b>2.5.4</b> Synthèse : typologie communale</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#synthese-dictionnaire-des-variables"><i class="fa fa-check"></i><b>2.6</b> Synthèse : Dictionnaire des variables</a></li>
+<li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
+<li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>3</b> Modélisation de la probabilité de fusionner</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -114,7 +117,7 @@
 </ul>
 <div id="creation-des-couples-de-communes" class="section level2">
 <h2><span class="header-section-number">2.1</span> Création des couples de communes</h2>
-<p>Chaque ligne de la base de donnée représente un couple de communes contigües (c’est à dire qu’elle se touchent en au moins un point). La base est donc contstituée de deux colonnes “commune A” et “commune B” et on compte 218 000 couples, mais pour dans lesquels A,B et B,A forment deux lignes distinces. On crée donc un identifiant unique pour A,B et B,A pour n’avoir qu’une occurrence des couples dans la base. Il y a donc, au final, envrion 109 000 lignes dans la base.</p>
+<p>Chaque ligne de la base de donnée représente un couple de communes contigües (c’est à dire qu’elle se touchent en au moins un point). La base est donc contstituée de deux colonnes “commune A” et “commune B” et on compte 218 000 couples, mais pour dans lesquels A,B et B,A forment deux lignes distinctes. On crée donc un identifiant unique pour A,B et B,A pour n’avoir qu’une occurrence des couples dans la base. Il y a donc, au final, envrion 109 000 lignes dans la base.</p>
 <pre><code>##   Var1 Var2 first second ident codgeo1 codgeo2
 ## 1    1   25     1     25  1_25   01001   01028
 ## 2    1   86     1     86  1_86   01001   01093
@@ -122,17 +125,34 @@
 ## 4    1  172     1    172 1_172   01001   01188
 ## 5    1  319     1    319 1_319   01001   01351
 ## 6    1  377     1    377 1_377   01001   01412</code></pre>
-<p>On s’assure</p>
 </div>
 <div id="indicateurs-communaux-mobilises" class="section level2">
 <h2><span class="header-section-number">2.2</span> Indicateurs communaux mobilisés</h2>
-<p>Pour déterminer les caractéristiques des communes (et ensuite déterminer si elles sont très différentes ou homogènes), nous avons utilisé la base “comparateur de de territoires” fournie par l’Insee. Celle-ci constitue une synthèses de diverses sources de données (recensement de la population, Connaissance locale de l’appareil production, fichiers d’état civil, fichiers fiscaux…).</p>
+<p>Pour déterminer les caractéristiques des communes (et ensuite déterminer si elles sont très différentes ou homogènes), nous avons utilisé la base <a href="https://www.insee.fr/fr/statistiques/2521169">comparateur de de territoires</a> fournie par l’Insee. Celle-ci constitue une synthèses de diverses sources de données (recensement de la population, Connaissance locale de l’appareil production, fichiers d’état civil, fichiers fiscaux…). Certaines variables de cette base sont présentes pour 2008 et 2013, ce qui nous a permis de calculer des évolutions en plus des stocks. On a également ajouté la variable de densité de population (hab/km²)</p>
+<p>A cette base, on ajoute quelques indicateurs supplémentaires : - Revenu médian communal (Source : Filocom2015). <strong>Attention, données à ne pas diffuser</strong> - Potentiel financier de la commune (Source : DGCL). Le potentiel financier indique le montant des recettes fiscal que percevrait la commune si elle pratique les taux de prélèvement moyens. C’est un proxy de la “richesse” des communes.</p>
 </div>
 <div id="indicateurs-de-flux" class="section level2">
 <h2><span class="header-section-number">2.3</span> Indicateurs de flux</h2>
+<p>Pour mesurer l’intensité des liens entre les communes contigües, notamment les échanges économiques, nous avons rassemblé 4 indicateurs bilocalisés :</p>
+<ul>
+<li>Le nombre d’actifs se déplaçant de la commune A à la commune B (et réciproquement) (source : RP2013)</li>
+<li>Le nombre de migrations résidentielles entre les deux communes A et B intervenues entre 2012 et 2013 (source : RP2013)</li>
+<li>Le nombre de logements en location de la commune A détenus par des propriétaires de la commune B et réciproquement (source : filocom2015) <strong>Attention, données à ne pas diffuser</strong> -Le nombre de résidences secondaires de la commune A détenus par les propriétaires habitant la commune B et réciproquement (source : filocom2015) <strong>Attention, données à ne pas diffuser</strong></li>
+</ul>
 </div>
 <div id="appartenance-a-un-meme-perimetre" class="section level2">
 <h2><span class="header-section-number">2.4</span> Appartenance à un même périmètre</h2>
+<p>Enfin, nous avons créé des variables binaires d’appartenance à un même périmètre géogpraphique. Ces variables valent 1 si les communes A et B appartiennent aux mêmes :</p>
+<ul>
+<li>Etablissement public de coopération intercommunale (EPCI, eg communautés de communes), contours 2014 et 2016</li>
+<li>Département</li>
+<li>Zone d’emploi (Insee)</li>
+<li>Bassin de vie (Insee)</li>
+<li>Aire urbaine (Insee)</li>
+<li>Schéma de cohérence territoriale (document d’urbanisme supracommunal)</li>
+<li>Plan local d’urbanisme intercommunal</li>
+</ul>
+<p>Ceci permet de mesurer la proximité institutionnelle (périmètres administratif) et fonctionnelle (zonages d’études de l’Insee) des communes.</p>
 
 </div>
 <div id="determination-de-la-couleur-politique-des-communes" class="section level2">
@@ -157,19 +177,19 @@
 <div id="analyse-factorielle-des-resultats" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Analyse factorielle des résultats</h3>
 <p>Maintenant que nous disposons d’une table exploitable, on peut réaliser une analyse factorielle pour pouvoir synthétiser le positionnement politique des communes. Pour cela, on effectue une analyse factorielle des correspondance, puisqu’on dispose de 2 variables qualitatives : la commune (individus lignes dans le tableau de contingence) et le candidat (individus colonne).</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-1.png" width="576" /></p>
 <p>D’après l’histogramme des valeurs propres, on voit que l’inertie du tableau de contingence est très concentrée sur les 2 premiers axes factoriels, à hauteur de 70%. Le critère du point d’inflexion conduirait à retenir les 4 premiers axes (la dérivée seconde change de signe au niveau de la 4e valeur propre), pour 87% de l’inertie totale.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-11-1.png" width="576" /></p>
 <p>On observe un effet Guttman assez net sur le premier plan factoriel : on a une opposition nette entre les candidats extrêmes à droite et les candidats “modérés” sur la gauche. Le second axes semble davantage retracer le clivage gauche-droite, avec les candidats Macron et Le Pen proche du barycentre. Le dexième plan factoriel donne lui à voir des différences moins structurantes à l’échelle nationale, mais on voit nettement la particularité “locale” du vote Lassalle, ainsi que (dans une moindre mesure) de celui en faveur de Dupont-Aignan.</p>
 <p>La représentation cartographique de ces axes factoriels :</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-2.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-12-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-12-2.png" width="576" /></p>
 </div>
 <div id="synthese-typologie-communale" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Synthèse : typologie communale</h3>
 <p>Pour la suite des opérations (modélisation de fusion/ non fusion), nous allons garder les 4 variables quantitatives obtenues par l’AFC mais pour pousser la démarche jusqu’au bout, nous réalisons une classification (clustering) des communes à partir des coordonnées factorielles obtenues. Etant donnés le nombre d’individus et le manque de puissance de la machine sur laquelle je travaille (4Go de RAM), une CAH est impossible (sauf à faire un premier k-means pour diminuer la dimension…), nous réalisons donc un clustering avec l’algorithme k-means puis dbscan</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-13-1.png" width="576" /></p>
 <p>Le gain de variance inter-classes augmente très rapidement quand on agmente le nombre de classe, mais le gain marginal s’atténue assez rapidement. On retient donc 5 classes, qui retracent près de 60% de la variance totale des quatre variables.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-2.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-3.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-2.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-3.png" width="576" /></p>
 
 </div>
 </div>
@@ -177,30 +197,28 @@
 <h2><span class="header-section-number">2.6</span> Synthèse : Dictionnaire des variables</h2>
 <p>La base compte au final 48 variables :</p>
 <pre><code>##  [1] &quot;ident&quot;              &quot;first&quot;              &quot;second&quot;            
-##  [4] &quot;dist_P13_POP&quot;       &quot;dist_P08_POP&quot;       &quot;dist_SUPERF&quot;       
-##  [7] &quot;dist_NAIS0813&quot;      &quot;dist_DECE0813&quot;      &quot;dist_P13_MEN&quot;      
-## [10] &quot;dist_NAISD15&quot;       &quot;dist_DECESD15&quot;      &quot;dist_P13_LOG&quot;      
-## [13] &quot;dist_P13_RP&quot;        &quot;dist_P13_RSECOCC&quot;   &quot;dist_P13_LOGVAC&quot;   
-## [16] &quot;dist_P13_RP_PROP&quot;   &quot;dist_NBMENFISC13&quot;   &quot;dist_PIMP13&quot;       
-## [19] &quot;dist_MED13&quot;         &quot;dist_TP6013&quot;        &quot;dist_P13_EMPLT&quot;    
-## [22] &quot;dist_P13_EMPLT_SAL&quot; &quot;dist_P08_EMPLT&quot;     &quot;dist_P13_POP1564&quot;  
-## [25] &quot;dist_P13_CHOM1564&quot;  &quot;dist_P13_ACT1564&quot;   &quot;dist_ETTOT14&quot;      
-## [28] &quot;dist_ETAZ14&quot;        &quot;dist_ETBE14&quot;        &quot;dist_ETFZ14&quot;       
-## [31] &quot;dist_ETGU14&quot;        &quot;dist_ETGZ14&quot;        &quot;dist_ETOQ14&quot;       
-## [34] &quot;dist_ETTEF114&quot;      &quot;dist_ETTEFP1014&quot;    &quot;dist_revmoy&quot;       
-## [37] &quot;dist_pot_fin&quot;       &quot;dist_Pol1&quot;          &quot;dist_Pol2&quot;         
-## [40] &quot;nb_locprop&quot;         &quot;nb_RS&quot;              &quot;nb_mig&quot;            
-## [43] &quot;nb_navettes&quot;        &quot;dep&quot;                &quot;ze&quot;                
-## [46] &quot;bv&quot;                 &quot;au&quot;                 &quot;epci2014&quot;          
-## [49] &quot;epci2016&quot;           &quot;scot&quot;               &quot;plui&quot;              
-## [52] &quot;fusion_2016&quot;        &quot;fusion_2015&quot;        &quot;fusion&quot;</code></pre>
+##  [4] &quot;dist_P13_POP&quot;       &quot;dist_SUPERF&quot;        &quot;dist_P13_MEN&quot;      
+##  [7] &quot;dist_NAISD15&quot;       &quot;dist_DECESD15&quot;      &quot;dist_P13_LOG&quot;      
+## [10] &quot;dist_P13_RP&quot;        &quot;dist_P13_RSECOCC&quot;   &quot;dist_P13_LOGVAC&quot;   
+## [13] &quot;dist_P13_RP_PROP&quot;   &quot;dist_NBMENFISC13&quot;   &quot;dist_PIMP13&quot;       
+## [16] &quot;dist_MED13&quot;         &quot;dist_TP6013&quot;        &quot;dist_P13_EMPLT&quot;    
+## [19] &quot;dist_P13_EMPLT_SAL&quot; &quot;dist_P13_POP1564&quot;   &quot;dist_P13_CHOM1564&quot; 
+## [22] &quot;dist_P13_ACT1564&quot;   &quot;dist_ETTOT14&quot;       &quot;dist_ETAZ14&quot;       
+## [25] &quot;dist_ETBE14&quot;        &quot;dist_ETFZ14&quot;        &quot;dist_ETGU14&quot;       
+## [28] &quot;dist_ETGZ14&quot;        &quot;dist_ETOQ14&quot;        &quot;dist_ETTEF114&quot;     
+## [31] &quot;dist_ETTEFP1014&quot;    &quot;dist_revmoy&quot;        &quot;dist_pot_fin&quot;      
+## [34] &quot;dist_Pol1&quot;          &quot;dist_Pol2&quot;          &quot;dist_evol_pop&quot;     
+## [37] &quot;dist_densite&quot;       &quot;dist_evol_nais&quot;     &quot;dist_evol_dec&quot;     
+## [40] &quot;dist_evol_empl&quot;     &quot;nb_locprop&quot;         &quot;nb_RS&quot;             
+## [43] &quot;nb_mig&quot;             &quot;nb_navettes&quot;        &quot;dep&quot;               
+## [46] &quot;ze&quot;                 &quot;bv&quot;                 &quot;au&quot;                
+## [49] &quot;epci2014&quot;           &quot;epci2016&quot;           &quot;scot&quot;              
+## [52] &quot;plui&quot;               &quot;fusion_2016&quot;        &quot;fusion_2015&quot;       
+## [55] &quot;fusion&quot;</code></pre>
 <p>Le préfixe “dist_” indique qu’il s’agit d’un indicateur de dissimilarité. Le préfixe “nb_” indique qu’il s’agit d’un indicateur de flux. Les variables non préfixées sont les variables binaires d’appartenance géographique.</p>
 <ul>
 <li>P13_POP : Population en 2013</li>
-<li>P09_POP : Population en 2009</li>
 <li>SUPERF : Superficie (en km2)</li>
-<li>NAIS0913 : Nombre de naissances entre le 01/01/2009 et le 01/01/2013</li>
-<li>DECE0913 : Nombre de décès entre le 01/01/2009 et le 01/01/2013</li>
 <li>P13_MEN : Nombre de ménages en 2013</li>
 <li>NAISD15 : Nombre de naissances domiciliées en 2015</li>
 <li>DECESD15 : Nombre de décès domiciliés en 2015</li>
@@ -232,6 +250,10 @@
 <li>pot_fin : Potentiel financier de la commune (ressources fiscal si elle applique les taux de prélèvement moyens)</li>
 <li>Pol1 : Premier axe facttoriel de l’AFC sur les résultats électoraux (présidentielles 2017, tour 1)</li>
 <li>Pol2 : Deuxième axe facttoriel de l’AFC sur les résultats électoraux (présidentielles 2017, tour 1)</li>
+<li>evol_nais : évolution du nombre de naissances entre 2013 et 2015</li>
+<li>evol_dec : évolution du nombre de décès entre 2013 et 2015</li>
+<li>evol_pop : évolution de la population entre 2008 et 2013</li>
+<li>evol_empl : évolution du nombre d’emplois au lieu de travail entre 2008 et 2013</li>
 <li>RS : nombre de résidences secondaires de la commune A détenus par un propriétaire de la commune B (et réciproquement)</li>
 <li>loc_prop : nombre de logements loués de la commune A détenus par un propriétaire de la commune B (et réciproquement)</li>
 <li>mig : nombre de migrations résidentielles (déménagements) de la commune A vers la commune B (et réciproquement)</li>
@@ -245,6 +267,14 @@
 <li>scot : appartenance au même SCOT (schéma de cohérence territoriale)</li>
 <li>plui : appartenance au même plan local d’urbanisme intercommunal</li>
 </ul>
+</div>
+<div id="imputations-et-corrections" class="section level2">
+<h2><span class="header-section-number">2.7</span> Imputations et corrections</h2>
+<p>Afin d’avoir une base opérationnelle pour la partie statistiques descriptives et machine learning, nous avons enfin nettoyé les données : nous avons supprimé les variables pour lesquelles la part de données manquante était trop importante (&gt;3%), imputé les valeurs manquantes par la moyenne, et remplacé les distances “infinies” (causée par une valeur nulle d’un indicateur pour une commune) par le maximum observé sur les autres lignes.</p>
+
+</div>
+<div id="calcul-de-lindicateur-de-fusion" class="section level2">
+<h2><span class="header-section-number">2.8</span> Calcul de l’indicateur de fusion</h2>
 
 </div>
 </div>
@@ -253,8 +283,8 @@
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelisation-de-la-probabilite-de-fusionner.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

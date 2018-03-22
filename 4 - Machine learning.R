@@ -41,7 +41,8 @@ nbloc <- 12 # parce ce que j'ai 4 coeurs et on va faire les simul sur 3. Sur le 
 
 # bloc.actif <- 1  
 don <- dat
-bloc <- sample(1:nrow(don)%%(nbloc+1))
+bloc <- 1+sample(1:nrow(don)%%(nbloc))
+table(bloc)
 
 
 ### Mise en forme des données pour tensorflow
