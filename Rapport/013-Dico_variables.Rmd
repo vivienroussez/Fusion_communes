@@ -11,10 +11,7 @@ Le préfixe "dist_" indique qu'il s'agit d'un indicateur de dissimilarité. Le p
 
 
 - P13_POP : Population en 2013
-- P09_POP : Population en 2009
 - SUPERF : Superficie (en km2)
-- NAIS0913 : Nombre de naissances entre le 01/01/2009 et le 01/01/2013
-- DECE0913 : Nombre de décès entre le 01/01/2009 et le 01/01/2013
 - P13_MEN : Nombre de ménages en 2013
 - NAISD15 : Nombre de naissances domiciliées en 2015
 - DECESD15 : Nombre de décès domiciliés en 2015
@@ -46,6 +43,10 @@ Le préfixe "dist_" indique qu'il s'agit d'un indicateur de dissimilarité. Le p
 - pot_fin : Potentiel financier de la commune (ressources fiscal si elle applique les taux de prélèvement moyens)
 - Pol1 : Premier axe facttoriel de l'AFC sur les résultats électoraux (présidentielles 2017, tour 1)
 - Pol2 : Deuxième axe facttoriel de l'AFC sur les résultats électoraux (présidentielles 2017, tour 1)
+- evol_nais : évolution du nombre de naissances entre 2013 et 2015
+- evol_dec : évolution du nombre de décès entre 2013 et 2015
+- evol_pop : évolution de la population entre 2008 et 2013
+- evol_empl : évolution du nombre d'emplois au lieu de travail entre 2008 et 2013
 - RS : nombre de résidences secondaires de la commune A détenus par un propriétaire de la commune B (et réciproquement)
 - loc_prop : nombre de logements loués de la commune A détenus par un propriétaire de la commune B (et réciproquement)
 - mig : nombre de migrations résidentielles (déménagements) de la commune A vers la commune B (et réciproquement)
@@ -58,3 +59,7 @@ Le préfixe "dist_" indique qu'il s'agit d'un indicateur de dissimilarité. Le p
 - epci2016 : appartenance au même EPCI (contour 2016)
 - scot : appartenance au même SCOT (schéma de cohérence territoriale)
 - plui : appartenance au même plan local d'urbanisme intercommunal
+
+## Imputations et corrections
+
+Afin d'avoir une base opérationnelle pour la partie statistiques descriptives et machine learning, nous avons enfin nettoyé les données : nous avons supprimé les variables pour lesquelles la part de données manquante était trop importante, imputé les valeurs manquantes par la moyenne pour les autres, et remplacé les distances "infinies" (causée par une valeur nulle d'un indicateur pour une commune) par le maximum observé sur les autres lignes.

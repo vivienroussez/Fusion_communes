@@ -33,7 +33,7 @@ dat <- cbind(fact,num) %>%
   select(-ident,-first,-second,-starts_with("fusion"))
 row.names(dat) <- fact$ident
 
-acp <- PCA(dat,quali.sup = c(1:8,37),graph = F)
+acp <- PCA(dat,quali.sup = c(1:8,39),graph = F)
 plot.PCA(acp,choix="var",col.var="blue")
 plot.PCA(acp,choix=c("ind"),select = "contrib20")
 
