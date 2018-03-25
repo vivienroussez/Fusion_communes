@@ -121,7 +121,7 @@ dat <- select_if(datacomm,is.numeric)
 calculeDist <- function(couple)
 {
   sel <- dat[as.numeric(couple),]
-  aa <- apply(sel,MARGIN = 2,function(x) (x-lag(x))/(x+lag(x))) 
+  aa <- apply(sel,MARGIN = 2,function(x) abs(x-lag(x))/(x+lag(x))) 
   aa <- c(as.numeric(couple),aa[2,])
   # aa <- apply(sel,MARGIN = 2,dist)   %>% as.numeric()
   # aa <- c(as.numeric(couple),aa) # %>% t() %>% as.data.frame()
