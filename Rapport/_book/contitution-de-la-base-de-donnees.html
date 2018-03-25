@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-22">
+<meta name="date" content="2018-03-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="index.html">
-<link rel="next" href="modelisation-de-la-probabilite-de-fusionner.html">
+<link rel="next" href="analyse-des-features.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -82,7 +82,8 @@
 <li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
 <li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>3</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a></li>
+<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -165,7 +166,7 @@
 <div id="preparation-des-donnees" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Préparation des données</h3>
 <p>Avant de démarrer, il faut installer le package COGugaison, qui permet de passer facilement d’un millésime de géographique comunale à un autre. On charge en plus les packages du tidyverse, FactoMineR pour l’analyse des données, et sf pour la gestion des données géographiques. On charge également le fonds de carte communale de l’IGN. Pour le fonds de carte, il faut passer des arrondissements (Paris, Lyon, Marseille) à la commune (on ne dispose pas des informations à l’arrondissement dans la plupart des cas)</p>
-<pre><code>## Reading layer `COMMUNE&#39; from data source `E:\Datascience\Projet\Fusion_communes\Sources\COMMUNE.shp&#39; using driver `ESRI Shapefile&#39;
+<pre><code>## Reading layer `COMMUNE&#39; from data source `C:\Users\vivien.roussez\Documents\Work\Tampon\Fusion_communes\Sources\COMMUNE.shp&#39; using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 36571 features and 18 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
@@ -177,19 +178,19 @@
 <div id="analyse-factorielle-des-resultats" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Analyse factorielle des résultats</h3>
 <p>Maintenant que nous disposons d’une table exploitable, on peut réaliser une analyse factorielle pour pouvoir synthétiser le positionnement politique des communes. Pour cela, on effectue une analyse factorielle des correspondance, puisqu’on dispose de 2 variables qualitatives : la commune (individus lignes dans le tableau de contingence) et le candidat (individus colonne).</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
 <p>D’après l’histogramme des valeurs propres, on voit que l’inertie du tableau de contingence est très concentrée sur les 2 premiers axes factoriels, à hauteur de 70%. Le critère du point d’inflexion conduirait à retenir les 4 premiers axes (la dérivée seconde change de signe au niveau de la 4e valeur propre), pour 87% de l’inertie totale.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-11-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
 <p>On observe un effet Guttman assez net sur le premier plan factoriel : on a une opposition nette entre les candidats extrêmes à droite et les candidats “modérés” sur la gauche. Le second axes semble davantage retracer le clivage gauche-droite, avec les candidats Macron et Le Pen proche du barycentre. Le dexième plan factoriel donne lui à voir des différences moins structurantes à l’échelle nationale, mais on voit nettement la particularité “locale” du vote Lassalle, ainsi que (dans une moindre mesure) de celui en faveur de Dupont-Aignan.</p>
 <p>La représentation cartographique de ces axes factoriels :</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-12-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-12-2.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-2.png" width="576" /></p>
 </div>
 <div id="synthese-typologie-communale" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Synthèse : typologie communale</h3>
 <p>Pour la suite des opérations (modélisation de fusion/ non fusion), nous allons garder les 4 variables quantitatives obtenues par l’AFC mais pour pousser la démarche jusqu’au bout, nous réalisons une classification (clustering) des communes à partir des coordonnées factorielles obtenues. Etant donnés le nombre d’individus et le manque de puissance de la machine sur laquelle je travaille (4Go de RAM), une CAH est impossible (sauf à faire un premier k-means pour diminuer la dimension…), nous réalisons donc un clustering avec l’algorithme k-means puis dbscan</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-13-1.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 <p>Le gain de variance inter-classes augmente très rapidement quand on agmente le nombre de classe, mais le gain marginal s’atténue assez rapidement. On retient donc 5 classes, qui retracent près de 60% de la variance totale des quatre variables.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-2.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-3.png" width="576" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-1.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-2.png" width="576" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-3.png" width="576" /></p>
 
 </div>
 </div>
@@ -275,6 +276,22 @@
 </div>
 <div id="calcul-de-lindicateur-de-fusion" class="section level2">
 <h2><span class="header-section-number">2.8</span> Calcul de l’indicateur de fusion</h2>
+<p>Etant donné que nous cherchons à prédire la fusion des couples de communes, nous allons créer une variable indicatrice de fusion. Pour cela, nous allons de nouveau utiliser le package COGugaison.</p>
+<p>Nous prenons la base qui recense, d’une année à l’autre, les fusions / défusions. Dans notre cas, nous prenons les années 2015-2016 et 2016-2017 ainsi que les variables codgeo_2016, codgeo_2016 et typemodif.</p>
+<pre><code>##   cod2016 cod2017      annee typemodif     ratio
+## 1   76676   76601 2017-01-01         d 0.3236074
+## 2   76676   76676 2017-01-01         d 0.6763926
+## 3   01095   01095 2017-01-01         f 1.0000000
+## 4   01172   01095 2017-01-01         f 1.0000000
+## 5   01098   01098 2017-01-01         f 1.0000000
+## 6   01316   01098 2017-01-01         f 1.0000000</code></pre>
+<p>Puis, nous filtrons uniquement sur les fusions.</p>
+<p>Nous splitons les bases afin de recréer les couples de communes et nous ne gardons que les couples différents</p>
+<p>Enfin, nous créons un indicateur de fusion sur chaque base qui vaut “1” quand il y a fusion “0” sinon puis nous réintégrons l’information dans notre base de travail</p>
+<p>Nous avons donc:</p>
+<pre><code>##   type_fusion annee_2015_2017 annee_2015_2016 annee_2016_2017
+## 1           0          107308          107972          108418
+## 2           1            1774            1110             664</code></pre>
 
 </div>
 </div>
@@ -284,7 +301,7 @@
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="modelisation-de-la-probabilite-de-fusionner.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="analyse-des-features.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
