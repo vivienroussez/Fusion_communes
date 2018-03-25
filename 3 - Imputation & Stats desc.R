@@ -1,5 +1,6 @@
 require(tidyverse)
 require(FactoMineR)
+require(sf)
 
 load("Base.RData")
 table(base$fusion)
@@ -33,13 +34,17 @@ dat <- cbind(fact,num) %>%
   select(-ident,-first,-second,-starts_with("fusion"))
 row.names(dat) <- fact$ident
 
+baseML <- dat
+save(base,mapCom,baseML,couples,mapLight,file="Base.RData")
+
+#############################################
+########## Vraie partie stat desc ###########
+#############################################
+
+
 acp <- PCA(dat,quali.sup = c(1:8,39),graph = F)
 plot.PCA(acp,choix="var",col.var="blue")
 plot.PCA(acp,choix=c("ind"),select = "contrib20")
-
-baseML <- dat
-save(base,baseML,mapCom,couples,file="Base.RData")
-
 
 
 #summary(num)

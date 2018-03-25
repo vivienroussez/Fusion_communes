@@ -82,4 +82,4 @@ couples_ebh_uniques <- couples_ebh[-doublons,] %>%
 
 base <- merge(base,couples_ebh_uniques,by.x="ident",by.y="ident",all.x=T)
 
-save(base,mapCom,couples,file="Base.RData")
+save(base,mapCom,couples,mapLight,file="Base.RData")
