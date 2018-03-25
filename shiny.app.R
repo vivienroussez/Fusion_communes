@@ -31,12 +31,6 @@ library(pROC)
 
 
 
-
-data("cars")
-
-tab <- cars
-
-
 # Define UI for application that draws a histogram
 ui <- dashboardPage(skin = "blue",
   
@@ -135,9 +129,9 @@ ui <- dashboardPage(skin = "blue",
                     title = "",
                     width = "100%",
                     background = "black",
-                    checkboxGroupInput("Pop", "Population",
-                                   choices = c(100,1000,10000)
-                                   )
+                    selectInput("Pop", "Population",
+                                   choices = c(100,1000,10000),
+                                   selected = 1000)
                     
                     #sliderInput("Pop", "Population :", min=1,max=1000,value=100)
                   )),
@@ -163,7 +157,7 @@ server <- function(input, output) {
     L. 2113-9, L. 2113-11 et L. 2113-12 du Code général des collectivités territoriales (CGCT)."
   })
   output$L2<-renderText({
-    "La fusion de() communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
+    "La fusion de communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
      morale de l'ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
   })
   
@@ -257,14 +251,13 @@ server <- function(input, output) {
   
   ##### dashboard 4 communes par popolation 
   #Cartefull<-mapview(mapCom[1:4000,], col.regions = sf.colors(360))
-  CartePOP <- (merge(select(datacomm,"CODGEO","P13_POP"),mapCom, by.x="CODGEO",by.y="codgeo"))
-  x<-select(datacomm,"CODGEO","P13_POP")
-  y<-select(mapCom,"codgeo","geometry")
-  CartePOP <- (merge(x,y, by.x="CODGEO",by.y="codgeo"))
-  m<-reactive(CartePOP[CartePOP$P13_POP>input$Pop,"geometry"])
+  CartePOP <- select(mapCom,"codgeo","P13_POP")
+  
+  
   output$ZONE33<-renderLeaflet(
-  #leaflet(m))
-    Carte)
+    mapview(CartePOP[CartePOP$P13_POP>input$Pop,"geometry"]))
+    
+    
   }
 
 # Run the application 
