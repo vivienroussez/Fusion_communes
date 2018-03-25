@@ -55,6 +55,7 @@ polit <- read.csv2("Sources/Synthese_pol.csv")
 datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             merge(revenus,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             merge(potfi,by.x="CODGEO",by.y="com",all.x=T) %>%
+            merge(polit,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
             mutate(evol_pop=P13_POP/P08_POP,densite=P13_POP/SUPERF,evol_nais=NAISD15/NAIS0813,evol_dec=DECESD15/DECE0813,
                    evol_empl=P13_EMPLT/P08_EMPLT) %>%
             select(-P08_POP,-NAIS0813,-DECE0813,-P08_EMPLT)
@@ -66,6 +67,9 @@ datacomm <- merge(datacomm,zonages,by.x="CODGEO",by.y="codgeo",all.x=T) %>%
 mapCom <- select(mapCom,-ID_GEOFLA, -starts_with("CODE"), -POPULATION,-starts_with("NOM")) %>%
           mutate(codgeo=recode_arrond(INSEE_COM)) %>%
           group_by(codgeo) %>% summarise()
+
+mapCom <- merge(mapCom,datacomm,by.x="codgeo",by.y="CODGEO",all.x=T)
+
 contig <- st_intersects(mapCom,mapCom) # Matrice de contiguité
 
 # On enlève le premier élément qui est la commune elle-même

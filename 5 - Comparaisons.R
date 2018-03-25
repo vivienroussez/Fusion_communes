@@ -4,7 +4,7 @@ require(pROC)
 require(data.table)
 require(caret)
 
-prev <- fread("PrevML.csv",sep=";",dec=',')[,-1] %>% as.data.frame() %>%
+prev <- fread("PrevML.csv")[,-1] %>% as.data.frame() %>%
       mutate(Y=as.factor(Y))
 
 prev.factor <- select(prev,-Y) %>% mutate_all(function(x) as.factor((x>.5)+0))
@@ -19,7 +19,7 @@ save(prev,prev.roc,prev.conf,file="DiagML.RData")
 plot(prev.roc$MCO.step)
 
 par(mfrow=c(3,3))
-lapply(prev.roc, auc)
+lapply(prev.roc, plot)
 par(mfrow=c(1,1))
 
 plot(prev.roc$MCO)

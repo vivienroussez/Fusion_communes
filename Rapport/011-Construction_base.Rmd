@@ -16,19 +16,42 @@ Pour nourrir le modèle de machine learning, nous avons procédé en plusieurs �
 
 ## Création des couples de communes
 
-Chaque ligne de la base de donnée représente un couple de communes contigües (c'est à dire qu'elle se touchent en au moins un point). La base est donc contstituée de deux colonnes "commune A " et "commune B" et on compte 218 000 couples, mais pour dans lesquels A,B et B,A forment deux lignes distinces. On crée donc un identifiant unique pour A,B et B,A pour n'avoir qu'une occurrence des couples dans la base. Il y a donc, au final, envrion 109 000 lignes dans la base.
+Chaque ligne de la base de donnée représente un couple de communes contigües (c'est à dire qu'elle se touchent en au moins un point). La base est donc contstituée de deux colonnes "commune A" et "commune B" et on compte 218 000 couples, mais pour dans lesquels A,B et B,A forment deux lignes distinctes. On crée donc un identifiant unique pour A,B et B,A pour n'avoir qu'une occurrence des couples dans la base. Il y a donc, au final, envrion 109 000 lignes dans la base.
 
 ```{r}
 head(couples)
 ```
 
-On s'assure
 
 ## Indicateurs communaux mobilisés
 
-Pour déterminer les caractéristiques des communes (et ensuite déterminer si elles sont très différentes ou homogènes), nous avons utilisé la base "comparateur de de territoires" fournie par l'Insee. Celle-ci constitue une synthèses de diverses sources de données (recensement de la population, Connaissance locale de l'appareil production, fichiers d'état civil, fichiers fiscaux...). 
+Pour déterminer les caractéristiques des communes (et ensuite déterminer si elles sont très différentes ou homogènes), nous avons utilisé la base [comparateur de de territoires](https://www.insee.fr/fr/statistiques/2521169) fournie par l'Insee. Celle-ci constitue une synthèses de diverses sources de données (recensement de la population, Connaissance locale de l'appareil production, fichiers d'état civil, fichiers fiscaux...). Certaines variables de cette base sont présentes pour 2008 et 2013, ce qui nous a permis de calculer des évolutions en plus des stocks. On a également ajouté la variable de densité de population (hab/km²)
+
+A cette base, on ajoute quelques indicateurs supplémentaires :
+- Revenu médian communal (Source : Filocom2015). **Attention, données à ne pas diffuser**
+- Potentiel financier de la commune (Source : DGCL). Le potentiel financier indique le montant des recettes fiscal que percevrait la commune si elle pratique les taux de prélèvement moyens. C'est un proxy de la "richesse" des communes.
 
 
 ## Indicateurs de flux
 
+Pour mesurer l'intensité des liens entre les communes contigües, notamment les échanges économiques, nous avons rassemblé 4 indicateurs bilocalisés :
+
+- Le nombre d'actifs se déplaçant de la commune A à la commune B (et réciproquement) (source : RP2013)
+- Le nombre de migrations résidentielles entre les deux communes A et B intervenues entre 2012 et 2013 (source : RP2013)
+- Le nombre de logements en location de la commune A détenus par des propriétaires de la commune B et réciproquement (source : filocom2015) **Attention, données à ne pas diffuser**
+-Le nombre de résidences secondaires de la commune A détenus par les propriétaires habitant la commune B et réciproquement (source : filocom2015) **Attention, données à ne pas diffuser**
+
+
 ## Appartenance à un même périmètre
+
+Enfin, nous avons créé des variables binaires d'appartenance à un même périmètre géogpraphique. Ces variables valent 1 si les communes A et B appartiennent aux mêmes :
+
+- Etablissement public de coopération  intercommunale (EPCI, eg communautés de communes), contours 2014 et 2016
+- Département
+- Zone d'emploi (Insee)
+- Bassin de vie (Insee)
+- Aire urbaine (Insee)
+- Schéma de cohérence territoriale (document d'urbanisme supracommunal)
+- Plan local d'urbanisme intercommunal
+
+Ceci permet de mesurer la proximité institutionnelle (périmètres administratif) et fonctionnelle (zonages d'études de l'Insee) des communes.

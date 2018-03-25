@@ -25,6 +25,23 @@ for (ii in 1:ncol(num))
   num[is.nan(num[,ii]),ii] <- maxi[ii]
 }
 
+## Matrice de corrélation et ACP pour description rapide
+cor(num)
+
+dat <- cbind(fact,num) %>% 
+  mutate(y=as.factor(fusion)) %>%
+  select(-ident,-first,-second,-starts_with("fusion"))
+row.names(dat) <- fact$ident
+
+acp <- PCA(dat,quali.sup = c(1:8,39),graph = F)
+plot.PCA(acp,choix="var",col.var="blue")
+plot.PCA(acp,choix=c("ind"),select = "contrib20")
+
+baseML <- dat
+save(base,baseML,mapCom,couples,file="Base.RData")
+
+
+
 #summary(num)
 dat1 <- cbind(fact,num)
 ncol(num)
@@ -101,14 +118,3 @@ for (ii in coli)
 
 
 
-## Matrice de corrélation et ACP pour description rapide
-cor(num)
-#acp <- PCA(num)
-
-dat <- cbind(fact,num) %>% 
-  mutate(y=as.factor(fusion)) %>%
-  select(-ident,-first,-second,-starts_with("fusion"))
-row.names(dat) <- fact$ident
-
-baseML <- dat
-save(base,baseML,mapCom,couples,file="Base.RData")

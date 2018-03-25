@@ -1,0 +1,58 @@
+
+## Calcul de l'indicateur de fusion
+
+Etant donné que nous cherchons à prédire la fusion des couples de communes, nous allons créer une variable indicatrice de fusion.
+Pour cela, nous allons de nouveau utiliser le package COGugaison.
+
+Nous prenons la base qui recense, d'une année à l'autre, les fusions / défusions.
+Dans notre cas, nous prenons les années 2015-2016 et 2016-2017 ainsi que les variables codgeo_2016, codgeo_2016 et typemodif.
+
+```{r}
+#Base des fusions/défusions d'une année à l'autre
+head(PASSAGE_2016_2017_insee)
+PASSAGE_2016_2017_insee<-PASSAGE_2016_2017_insee
+```
+
+Puis, nous filtrons uniquement sur les fusions.
+```{r}
+fusion_2016_2017<-filter(PASSAGE_2016_2017_insee,typemodif=="f")
+```
+
+Nous splitons les bases afin de recréer les couples de communes et nous ne gardons que les couples différents 
+```{r}
+##création d'un indicateur de fusion selon l'année
+temp<-split(fusion_2016_2017,fusion_2016_2017$cod2017)
+temp1<-lapply(temp,function(x) expand.grid(x[,1],x[,1]))
+fusion_2016_2017_bis<-bind_rows(temp1)
+fusion_2016_2017_bis<-subset(fusion_2016_2017_bis,!Var1==Var2)
+```
+
+Enfin, nous créons un indicateur de fusion sur chaque base qui vaut "1" quand il y a fusion "0" sinon
+puis nous réintégrons l'information dans notre base de travail
+
+```{r}
+fusion_2016_2017_bis$fusion_2016<-1
+
+couples_ebh<-merge(couples,fusion_2016_2017_bis,
+                   by.x=c("codgeo1","codgeo2"),by.y=c("Var1","Var2"),all.x=T)
+couples_ebh$fusion_2016<-ifelse(is.na(couples_ebh$fusion_2016),yes=0,no=couples_ebh$fusion_2016)
+
+
+```
+
+Nous avons donc:
+```{r}
+f2015<-as.data.frame(table(base$fusion_2015))
+names(f2015)<-c("type_fusion","annee_2015_2016")
+
+f2016<-as.data.frame(table(base$fusion_2016))
+names(f2016)<-c("type_fusion","annee_2016_2017")
+
+fglobal<-as.data.frame(table(base$fusion))
+names(fglobal)<-c("type_fusion","annee_2015_2017")
+
+fglobal_bis<-merge(fglobal,f2015,by.x="type_fusion",all.x=T)
+fglobal_bis<-merge(fglobal_bis,f2016,by.x="type_fusion",all.x=T)
+fglobal_bis
+
+```
