@@ -196,4 +196,17 @@ flux <- group_by(flux,ident) %>% summarise(nb_locprop=sum(nb_locprop),
 
 base <- merge(distances,flux,by.x="ident",by.y="ident") %>%
         merge(zones,by.x="ident",by.y="ident")
-save(base,mapCom,couples,file="Base.RData")
+
+      
+      ###########################################################################################
+      # On va prendre le fonds généralisé pour gagner un peu de place, à la place du fonds IGN ##
+      # Il est projeté en mercator pour utilisation leaflet si besoin                          ##
+      ###########################################################################################
+
+com <- st_read("Sources/com_15.shp")
+proj <- st_crs(mapCom)
+st_crs(com) <- proj
+com <- st_transform(com,3857) # projection en mercator
+
+mapLight <- merge(com,datacomm,by.x="INSEE_COM",by.y="CODGEO",all.x=T) %>% rename(codgeo=INSEE_COM)
+save(base,mapCom,couples,mapLight,file="Base.RData")
