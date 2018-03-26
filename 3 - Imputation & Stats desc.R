@@ -31,6 +31,8 @@ dat1 <- cbind(fact,num)
 
 #On met en facteur la variable de fusion
 dat1$fusion<-as.factor(dat1$fusion)
+#on crée un identifiant
+dat1$indic<-rownames(dat1$ident)
 
 #Visualisation des boxplots pour les vars dist en fonction de la fusion
 library(ggplot2)
@@ -56,17 +58,46 @@ corrplot(dat1_cor, method = "pie")
 #K means
 #attention, il faut réduire et centrer qd les variables sont dans des unités différentes
 #on fait sur les données de l'ACP
-claskmeans<-kmeans(mat_cor,centers=10000)
+lst_km <- list()
+lst_km.ss <- list()
+for (ii in 1:20)
+{
+  lst_km[[ii]] <- kmeans(dat1_cor,ii,iter.max = 20)
+  lst_km.ss[[ii]] <- lst_km[[ii]]$betweenss/lst_km[[ii]]$totss
+}
+unlist(lst_km.ss) %>% plot(col="blue",xlab="Nombre de classes",ylab="Variance interclasse")
 
+#On voit que la variance intra-classes stagne à partir de 5 classes.
+#On voit qu'avec les 5 classes, près de 90% de la variance totale sur l'ensemble des variables une 
+
+cl <- lst_km[[5]]$cluster
+cl <- data.frame(ident=names(cl),cl)
+
+mapCl <- merge (map,cl,by.x="codgeo",by.y="codgeo",all.x=T)
+col <- carto.pal(n1 = nlevels(as.factor(mapCl$cl)),pal1="multi.pal")
+typoLayer(mapCl,var="cl",border=NA,legend.title.txt = "Cluster",col=col)
+dat <- merge(coord,cl,by.x="codgeo",by.y="codgeo") %>%
+  mutate(classe=as.factor(cl)) %>%
+  group_by(classe) %>%
+  summarise(Dim.1=mean(Dim.1),Dim.2=mean(Dim.2),Dim.3=mean(Dim.3),Dim.4=mean(Dim.4),communes=n())
+#        summarise_all(funs(moy=mean,et=sd)) Si on veut plusieurs stats pour toutes les variables
+ggplot(dat,aes(Dim.1,Dim.2,color=classe,size=communes)) + 
+  geom_point() + scale_size(range = c(4,15)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) 
+ggplot(dat,aes(Dim.3,Dim.4,color=classe,size=communes)) + 
+  geom_point() + scale_size(range = c(4,15)) +
+  geom_vline(xintercept = 0) + geom_hline(yintercept = 0) 
+
+
+
+
+claskmeans<-kmeans(mat_cor,centers=5)
 table(claskmeans$cluster)
 classk<-as.factor(claskmeans$cluster)
-cbind.data.frame(spam_final,classk)
+cbind.data.frame(dat1,classk)
 
-claskmeans<-kmeans(res.pcabis$ind$coord,centers=2)
-table(claskmeans$cluster)
-classk<-as.factor(claskmeans$cluster)
-spam_final1<-cbind.data.frame(spam_final,classk)
-table(spam_final1$X1,spam_final1$classk)
+
+table(dat1$fusion,dat1$classk)
 
 
 
