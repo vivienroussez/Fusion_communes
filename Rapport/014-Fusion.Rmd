@@ -2,10 +2,10 @@
 ## Calcul de l'indicateur de fusion
 
 Etant donné que nous cherchons à prédire la fusion des couples de communes, nous allons créer une variable indicatrice de fusion.
-Pour cela, nous allons de nouveau utiliser le package COGugaison.
+Pour cela, nous utilisons de nouveau le package COGugaison.
 
 Nous prenons la base qui recense, d'une année à l'autre, les fusions / défusions.
-Dans notre cas, nous prenons les années 2015-2016 et 2016-2017 ainsi que les variables codgeo_2016, codgeo_2016 et typemodif.
+Dans notre cas, nous prenons les années 2015-2016 et 2016-2017 ainsi que les variables codgeo_2016, codgeo_2017 et typemodif.
 
 ```{r}
 #Base des fusions/défusions d'une année à l'autre
@@ -27,8 +27,8 @@ fusion_2016_2017_bis<-bind_rows(temp1)
 fusion_2016_2017_bis<-subset(fusion_2016_2017_bis,!Var1==Var2)
 ```
 
-Enfin, nous créons un indicateur de fusion sur chaque base qui vaut "1" quand il y a fusion "0" sinon
-puis nous réintégrons l'information dans notre base de travail
+Enfin, nous créons un indicateur de fusion sur chaque base qui vaut "1" quand il y a fusion "0" sinon.  
+Puis nous réintégrons l'information dans notre base de travail
 
 ```{r}
 fusion_2016_2017_bis$fusion_2016<-1
@@ -56,3 +56,4 @@ fglobal_bis<-merge(fglobal_bis,f2016,by.x="type_fusion",all.x=T)
 fglobal_bis
 
 ```
+Les fusions repr�sentent 1 774 couples de communes sur 109 082 au total soit 1,6% de la base. Ce qui est tr�s faible.  
