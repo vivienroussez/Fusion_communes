@@ -62,10 +62,13 @@ ui <- dashboardPage(skin = "blue",
                       # The id lets us use input$tabset1 on the server to find the current tab
                       id = "tabset1", height = "400px",width = 12,
                       
-                      tabPanel("Un peu d'histoire !  ",textOutput("L1"),textOutput("L2"))
-                            
+                      tabPanel("Un peu d'histoire !  ",textOutput("L1"),textOutput("L2")),
                              
-                  )),
+                  
+                      tabPanel("dist population  ", plotOutput("POP1", height = 200, width="80%")),
+                      tabPanel("dist politique   ", plotOutput("POL", height = 200, width="80%")),
+                      tabPanel("dist Navette  ", plotOutput("NAV", height = 200, width="80%")))
+                  ),
                   
                     
                    
@@ -158,11 +161,15 @@ server <- function(input, output) {
     jusqu'alors distinctes. La procédure de fusion fait l'objet des articles L. 2113-1 à L. 2113-5,
     L. 2113-9, L. 2113-11 et L. 2113-12 du Code général des collectivités territoriales (CGCT)."
   })
+  
   output$L2<-renderText({
     "La fusion de communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
      morale de l'ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
   })
-  
+  output$POP1<-renderPlot({
+                          ggplot(dat1,aes(x=fusion,y=dist_P13_POP))+geom_violin()+geom_boxplot(width=0.1)})
+  output$POL<-renderPlot({ggplot(dat1,aes(x=fusion,y=dist_Pol1))+geom_violin()+geom_boxplot(width=0.1)})
+    output$NAV<-renderPlot({ggplot(dat1,aes(x=fusion,y=log(nb_navettes)))+geom_violin()+geom_boxplot(width=0.1)})
   
   # First tab content*********************************************
   output$plot1 <- renderPlot({
