@@ -4,13 +4,18 @@ require(pROC)
 require(data.table)
 require(caret)
 
-prev <- fread("PrevML.csv")[,-1] %>% as.data.frame() %>%
-      mutate(Y=as.factor(Y))
+prev.DNN <- read.csv("PrevML_DNN.csv")[,-1] %>% as.data.frame() 
+prev.reste <- read.csv("PrevML_REG_ARBRES.csv")[,-1] %>% as.data.frame() %>%
+  mutate(Y=as.factor(Y))
 
-prev.factor <- select(prev,-Y) %>% mutate_all(function(x) as.factor((x>.5)+0))
+prev <- cbind(prev.reste,prev.DNN)
 
 prev.roc  <- lapply(prev[,-1],function(x) roc(prev$Y,x))
-prev.conf <- lapply(prev.factor, function(x) confusionMatrix(x,prev$Y))
+prev.bin <- lapply(prev.roc,function(x) x$response) %>% as.data.frame()
+prev.conf <- lapply(prev.bin,function(x) confusionMatrix(x,prev$Y))
+
+par(mfrow=c(2,5))
+lapply(prev.roc,plot)
 
 save(prev,prev.roc,prev.conf,file="DiagML.RData")
 
@@ -24,7 +29,7 @@ par(mfrow=c(1,1))
 
 plot(prev.roc$MCO)
 str(prev.roc[[1]])
-
+  
 ggplot(prev,aes(x=DNN)) + geom_density()
 
 for (ii in seq(.1,.9,.1))

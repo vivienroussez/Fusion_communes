@@ -1,2 +1,83 @@
 
 # Analyse des features
+
+Nous regardons la distribution d'une variable de chaque grande famille de données
+
+## La variable de distance sur la population: dist_P13_POP
+```{r}
+library(ggplot2)
+ggplot(dat1,aes(x=fusion,y=dist_P13_POP))+geom_violin()+geom_boxplot(width=0.1)
+```
+On constate qu'il y a beaucoup de couple de communes qui ont une faible différence de population lors de la non-fusion. On retrouve le cas pour les communes rurales ou les grandes villes.  
+
+## La variable sur l'appartenance politique: dist_Pol1
+```{r}
+ggplot(dat1,aes(x=fusion,y=dist_Pol1))+geom_violin()+geom_boxplot(width=0.1)
+```
+On constate, sur les non-fusion, une grande disparité des valeurs, ce qui n'est pas le cas pour la fusion. Ce qui confirmerait que les communes ayant fusionné ont une même tendance politique.  
+
+## La variable du nombre de navettes inter-communes: nb_navettes  
+```{r}
+ggplot(dat1,aes(x=fusion,y=log(nb_navettes)))+geom_violin()+geom_boxplot(width=0.1)
+```
+Nous sommes passés au logarithme afin d'attenuer l'effet des valeurs extrèmes.  
+
+## Matrice des corrélations
+```{r}
+#install.packages("corrplot")
+library(corrplot)
+library(dplyr)
+mat_cor<-select(dat1,starts_with("nb"),starts_with("dist"))
+dat1_cor<-round(cor(mat_cor),2)
+
+#corrplot(dat1_cor, method = "circle")
+#corrplot(dat1_cor, method = "ellipse")
+#corrplot(dat1_cor, method = "number")
+corrplot(dat1_cor, method = "pie")
+```
+On constate qu'il n'y a pas de corrélations linéaires entre les variables de distances et les variables de nb.
+On voit qu'il y a des corrélations entre certaines variables. Par exemple, dist_P13_POP et dist_P13_LOC.  
+
+Mais, d'un premier temps, on gardera toutes les variables afin de voir si les méthodes de ML autre que les regressions sont meilleures. Si oui, on ne travaillera pas les corrélations.  
+
+Avant de lancer les méthodes de ML supervisées, nous allons faire du clustering afin de voir s'il n'existerait pas de clusters de couple de communes.
+
+## Clustering
+Etant donné, le nombre important de lignes et la faible capacité de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. 
+
+```{r}
+library(dplyr)
+lst_km <- list()
+lst_km.ss <- list()
+for (ii in 1:20)
+{
+  lst_km[[ii]] <- kmeans(mat_cor,ii,iter.max = 20)
+  lst_km.ss[[ii]] <- lst_km[[ii]]$betweenss/lst_km[[ii]]$totss
+}
+unlist(lst_km.ss) %>% plot(col="blue",xlab="Nombre de classes",ylab="Variance interclasse")
+```
+
+On voit que la variance intra-classes stagne à partir de 6 classes.  
+On voit qu'avec les 6 classes, on retrace près de 90% de la variance totale
+
+On affecte à chaque couple de communes, son cluster d'appartenance et on regarde dans chaque cluster la répartition de la variable fusion 
+
+```{r}
+cl <- lst_km[[6]]$cluster
+
+cl <- data.frame(cl)
+cl$ident<-rownames(cl)
+dat1$ident<-rownames(dat1)
+
+dat1Cl <- merge(dat1,cl,by.x="ident",by.y="ident",all.x=T)
+
+dat1Cl$fusion_class <- ifelse(dat1Cl$fusion=="0","Non Fusion","Fusion")
+dat1Cl$cl <- as.factor(dat1Cl$cl)
+dat1Cl$cl_class<-paste("cluster",dat1Cl$cl)
+
+tableau<-table(dat1Cl$cl_class,dat1Cl$fusion_class) %>% addmargins()
+tableau
+```
+
+On constate que le cluster 6 contient la quasi-totalité des fusions.
+
