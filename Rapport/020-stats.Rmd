@@ -46,6 +46,7 @@ Avant de lancer les méthodes de ML supervisées, nous allons faire du clustering 
 Etant donné, le nombre important de lignes et la faible capacité de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. 
 
 ```{r}
+library(dplyr)
 lst_km <- list()
 lst_km.ss <- list()
 for (ii in 1:20)
@@ -75,6 +76,7 @@ dat1Cl$cl <- as.factor(dat1Cl$cl)
 dat1Cl$cl_class<-paste("cluster",dat1Cl$cl)
 
 tableau<-table(dat1Cl$cl_class,dat1Cl$fusion_class) %>% addmargins()
+tableau
 ```
 
 On constate que le cluster 6 contient la quasi-totalité des fusions.
