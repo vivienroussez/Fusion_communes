@@ -124,7 +124,7 @@ ui <- dashboardPage(skin = "blue",
                       
           
           # third tab content*********************************************
-          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 700
+          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 600
                   
                   
                     # box(
