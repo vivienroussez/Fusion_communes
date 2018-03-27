@@ -22,7 +22,7 @@ library(tidyverse)
 library(pROC)
 
 ## les données shiny
-
+k=1000
 
 
 
@@ -42,8 +42,8 @@ ui <- dashboardPage(skin = "blue",
           menuItem("Analyse Descriptive", tabName = "dashboard1", icon = icon("dashboard")),
           menuItem("Modélisation", tabName = "dashboard2", icon = icon("dashboard")),
           menuItem("Population Par commune", tabName = "dashboard3", icon = icon("dashboard")),
-          menuItem("Les communes Fusionnées", tabName = "dashboard4", icon = icon("dashboard"))
-      
+          menuItem("Les communes Fusionnées", tabName = "dashboard4", icon = icon("dashboard")),
+          sliderInput('k','Population maximale par Commune:',min=100,max=10000,value=1000)
     )),
 
     # Body Content ***********************************************************************************************************
@@ -74,9 +74,9 @@ ui <- dashboardPage(skin = "blue",
                     fluidRow(
                       valueBox(109082, "Couples de Communes", icon = icon("List"),width=4,color="light-blue"),
                    
-                      valueBox(1774, "Fusions", icon = icon("List"), width=4,color="yellow"),
+                      valueBox(1774, "1,6% Fusions", icon = icon("List"), width=4,color="black"),
                   
-                     valueBox(2016, "Historique depuis", icon = icon("List"), width=4,color="light-blue")
+                     valueBox(2015, "Historique depuis", icon = icon("List"), width=4,color="light-blue")
                    )
                    ),
             
@@ -124,15 +124,17 @@ ui <- dashboardPage(skin = "blue",
                       
           
           # third tab content*********************************************
-          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 400
-                  ),box(
-                    title = "",
-                    width = "100%",
-                    background = "black",
-                    selectInput("Pop", "Population",
-                                   choices = c(100,1000,10000),
-                                   selected = 1000)
-                    
+          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 700
+                  
+                  
+                    # box(
+                    # title = "",
+                    # width = "100%",
+                    # background = "black",
+                    # selectInput("k", "Population",
+                    #                choices = c(100,1000,10000),
+                    #                selected = 1000)
+
                     #sliderInput("Pop", "Population :", min=1,max=1000,value=100)
                   )),
           # fourth tab content *********************************************
@@ -250,14 +252,41 @@ server <- function(input, output) {
   })
   
   ##### dashboard 4 communes par popolation 
+  
+  ### CODE préparation carte ###########
+  
+  com <- st_read("Sources/com_15.shp")
+  # On va prendre le fonds généralisé pour gagner un peu de place, à la place du fonds IGN
+  proj <- st_crs(mapCom)
+  st_crs(com) <- proj
+  com <- st_transform(com,3857) # projection en mercator
+  
+ 
+  ################
+  
   #Cartefull<-mapview(mapCom[1:4000,], col.regions = sf.colors(360))
-  CartePOP <- select(mapCom,"codgeo","P13_POP")
+  #CartePOP <- select(mapCom,"codgeo","P13_POP")
+  #m <- st_transform(mapCom, "+proj=longlat +datum=WGS84") %>% select(codgeo,P13_POP)%>%filter(.,P13_POP>k))
+  
+ # m1<-reactive(filter(CartePOP,CartePOP$P13_POP>input$Pop))
+  m<- eventReactive(input$k,{ st_transform(mapCom, "+proj=longlat +datum=WGS84") %>% select(codgeo,P13_POP)%>%filter(.,P13_POP<input$k)})
   
   
-  output$ZONE33<-renderLeaflet(
-    mapview(CartePOP[CartePOP$P13_POP>input$Pop,"geometry"]))
+   output$ZONE33<-renderLeaflet(
+                                map<-leaflet()%>% addProviderTiles(providers$OpenStreetMap.France)%>%setView(7.3,48,zoom=5)
+                               
+    )
     
+    observeEvent(input$k,{
+      print(m())
+      v <- m()
+      leafletProxy('ZONE33')%>%addPolygons(data=v,color = rainbow(20))
+    })
     
+   # m<-filter(CartePOP,CartePOP$P13_POP> 10000)%>%
+    #leaflet()%>%addTiles()%>%addPolygons(data=m)
+  
+  #   
   }
 
 # Run the application 
