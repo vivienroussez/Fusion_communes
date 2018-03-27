@@ -78,52 +78,52 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   XX.test <- model.matrix(y~.,data=test)
   
   ### GLM
-  mco <- glm(y~.,data=train,family = binomial)
-  mco.prev <- predict(mco,newdata=test,type="response") %>% as.data.frame()
-  names(mco.prev)[1] <- "MCO"
+  # mco <- glm(y~.,data=train,family = binomial)
+  # mco.prev <- predict(mco,newdata=test,type="response") %>% as.data.frame()
+  # names(mco.prev)[1] <- "MCO"
   
   ### GLM avec choix des variables
-  mco.step <- step(mco)
-  mco.step.prev <- predict(mco.step,newdata=test,type="response") %>% as.data.frame()
-  names(mco.step.prev)[1] <- "MCO.step"
+  # mco.step <- step(mco)
+  # mco.step.prev <- predict(mco.step,newdata=test,type="response") %>% as.data.frame()
+  # names(mco.step.prev)[1] <- "MCO.step"
   
   ### Lasso
-  lambda_lasso <- cv.glmnet(XX,YY,family="binomial",alpha=1)$lambda.1se ## Détermination auto du lambda
-  lasso <- glmnet(XX,YY,family="binomial",alpha=1,lambda = lambda_lasso)
-  lasso.prev <- predict(lasso,newx = XX.test,type="response") %>% as.data.frame()
-  names(lasso.prev)[1] <- "LASSO"
+  # lambda_lasso <- cv.glmnet(XX,YY,family="binomial",alpha=1)$lambda.1se ## Détermination auto du lambda
+  # lasso <- glmnet(XX,YY,family="binomial",alpha=1,lambda = lambda_lasso)
+  # lasso.prev <- predict(lasso,newx = XX.test,type="response") %>% as.data.frame()
+  # names(lasso.prev)[1] <- "LASSO"
   
   ### Ridge
-  lambda_ridge <- cv.glmnet(XX,YY,family="binomial",alpha=0)$lambda.1se ## Détermination auto du lambda
-  ridge <- glmnet(XX,YY,family="binomial",alpha=0,lambda = lambda_ridge)
-  ridge.prev <- predict(ridge,newx = XX.test,type="response") %>% as.data.frame()
-  names(ridge.prev)[1] <- "RIDGE"
+  # lambda_ridge <- cv.glmnet(XX,YY,family="binomial",alpha=0)$lambda.1se ## Détermination auto du lambda
+  # ridge <- glmnet(XX,YY,family="binomial",alpha=0,lambda = lambda_ridge)
+  # ridge.prev <- predict(ridge,newx = XX.test,type="response") %>% as.data.frame()
+  # names(ridge.prev)[1] <- "RIDGE"
   
   ### Elasticnet
-  lambda_elastic <- cv.glmnet(XX,YY,family="binomial",alpha=.5)$lambda.1se ## Détermination auto du lambda
-  elastic <- glmnet(XX,YY,family="binomial",alpha=.5,lambda = lambda_elastic)
-  elastic.prev <- predict(elastic,newx = XX.test,type="response") %>% as.data.frame()
-  names(elastic.prev)[1] <- "ELASTIC"
+  # lambda_elastic <- cv.glmnet(XX,YY,family="binomial",alpha=.5)$lambda.1se ## Détermination auto du lambda
+  # elastic <- glmnet(XX,YY,family="binomial",alpha=.5,lambda = lambda_elastic)
+  # elastic.prev <- predict(elastic,newx = XX.test,type="response") %>% as.data.frame()
+  # names(elastic.prev)[1] <- "ELASTIC"
   
   ### Arbre
-  arbre <- rpart(y~.,data=train)
-  arbre.prev <- predict(arbre,newdata = test,type="prob")[,2] %>% as.data.frame()
-  names(arbre.prev) <- "ARBRE"
+  # arbre <- rpart(y~.,data=train)
+  # arbre.prev <- predict(arbre,newdata = test,type="prob")[,2] %>% as.data.frame()
+  # names(arbre.prev) <- "ARBRE"
   
   ## Adaboost
-  ada <- gbm(y~.,data=train,distribution="adaboost",
-             interaction.depth=2,shrinkage=0.005,train.fraction=0.8,n.trees=2000)
-  iter <- which(ada$valid.error<0.01) %>% min() # on prend le nombre d'itération tel qu'on passe à une 
+  # ada <- gbm(y~.,data=train,distribution="adaboost",
+  #            interaction.depth=2,shrinkage=0.005,train.fraction=0.8,n.trees=2000)
+  # iter <- which(ada$valid.error<0.01) %>% min() # on prend le nombre d'itération tel qu'on passe à une 
                                                 # erreur inf à 1% (sinon, le min est le dernier point dans notre cas, l'erreur decroit tout le temps)
-  ada <- gbm(y~.,data=train,distribution="adaboost",
-             interaction.depth=2,shrinkage=0.005,n.trees=iter)
-  ada.prev <- predict(ada,test,n.trees=iter) %>% as.data.frame()
-  names(ada.prev)[1] <- "ADABOOST"
+  # ada <- gbm(y~.,data=train,distribution="adaboost",
+  #            interaction.depth=2,shrinkage=0.005,n.trees=iter)
+  # ada.prev <- predict(ada,test,n.trees=iter) %>% as.data.frame()
+  # names(ada.prev)[1] <- "ADABOOST"
   
   ### Forêt
-  rf <- randomForest(y~.,data=train,ntrees=500)
-  rf.prev <- predict(rf,newdata = test,type = "prob")[,2] %>% as.data.frame()
-  names(rf.prev)[1] <- "FORET"
+  # rf <- randomForest(y~.,data=train,ntrees=500)
+  # rf.prev <- predict(rf,newdata = test,type = "prob")[,2] %>% as.data.frame()
+  # names(rf.prev)[1] <- "FORET"
   
   ### SVM linéaire
   # best.svm <- tune(svm,y~.,data=train,kernel="linear",
@@ -157,26 +157,38 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   }
 
   train(classifier, input_fn = DNN_input_fn(train.nn))
-  nn.prev <- predict(classifier, input_fn = DNN_input_fn(test.nn),predict_keys="probabilities")
-  nn.prev <- sapply(nn.prev$probabilities,function(x) x[2])
-  nn.eval <- evaluate(classifier, input_fn = DNN_input_fn(test.nn))
+  nn1.prev <- predict(classifier, input_fn = DNN_input_fn(test.nn),predict_keys="probabilities")
+  nn1.prev <- sapply(nn1.prev$probabilities,function(x) x[2])
+  nn1.eval <- evaluate(classifier, input_fn = DNN_input_fn(test.nn))
 
-
-  prev <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
-                   DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
+  classifier <- dnn_classifier(
+    feature_columns = feature_columns,
+    hidden_units = c(1024, 640, 120,12),
+    n_classes = 2
+  )
+  DNN_input_fn <- function(data) {
+    input_fn(data, features = features(), response = response())
+  }
   
+  train(classifier, input_fn = DNN_input_fn(train.nn))
+  nn2.prev <- predict(classifier, input_fn = DNN_input_fn(test.nn),predict_keys="probabilities")
+  nn2.prev <- sapply(nn2.prev$probabilities,function(x) x[2])
+ 
+#   prev <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
+#                    DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
+#   
   # prev <- data.frame(SVM.lin=svm.prev,SVM.rad=svm.prev.rad)
-  
+  prev <- data.frame(DNN1=nn1.prev,DNN2=nn2.prev)
   # modeles <- list(MCO=mco,MCO.step=mco.step,RIDGE=ridge,LASSO=lasso,ELAST=elastic,ARBRE=arbre,BOOST=ada,FORET=rf,DNN=nn.eval)
   res <- prev
   return(res)
   
 }
-#,SVM=svm.prev
+# 
 # system.time(
-#   toto <- predit(bloc.actif = 1,don=don)
+#   predit(bloc.actif = 1,don=don)
+#   
 # )
-
 
 cl <- makeCluster(detectCores()-1) # ouverture du cluster
 registerDoParallel(cl)
@@ -191,3 +203,4 @@ system.time(
 
 stopCluster(cl) # arrêt du cluster
 prev.data <- bind_rows(prev)
+#write.csv(prev.data,file="PrevML_DNN.csv")
