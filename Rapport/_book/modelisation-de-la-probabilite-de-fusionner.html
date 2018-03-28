@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-25">
+<meta name="date" content="2018-03-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="analyse-des-features.html">
-
+<link rel="next" href="conclusion.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -47,6 +47,15 @@
 
 
 
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
+<link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
+<script src="libs/vis-4.20.1/vis.min.js"></script>
+<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
+<script src="libs/FileSaver-1.1.20151003/FileSaver.min.js"></script>
+<script src="libs/Blob-1.0/Blob.js"></script>
+<script src="libs/canvas-toBlob-1.0/canvas-toBlob.js"></script>
+<script src="libs/html2canvas-0.5.0/html2canvas.js"></script>
+<script src="libs/jspdf-1.3.2/jspdf.debug.js"></script>
 
 
 
@@ -66,7 +75,10 @@
 <li><a href="./">Prévoir les fusions de communes</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#pourquoi-ce-sujet"><i class="fa fa-check"></i><b>1.1</b> Pourquoi ce sujet ?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#pourquoi-pas-les-autres"><i class="fa fa-check"></i><b>1.2</b> Pourquoi pas les autres ?</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html"><i class="fa fa-check"></i><b>2</b> Contitution de la base de données</a><ul>
 <li class="chapter" data-level="2.1" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#creation-des-couples-de-communes"><i class="fa fa-check"></i><b>2.1</b> Création des couples de communes</a></li>
 <li class="chapter" data-level="2.2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#indicateurs-communaux-mobilises"><i class="fa fa-check"></i><b>2.2</b> Indicateurs communaux mobilisés</a></li>
@@ -82,8 +94,15 @@
 <li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
 <li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a></li>
+<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a><ul>
+<li class="chapter" data-level="3.1" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-de-distance-sur-la-population-dist_p13_pop"><i class="fa fa-check"></i><b>3.1</b> La variable de distance sur la population: dist_P13_POP</a></li>
+<li class="chapter" data-level="3.2" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-sur-lappartenance-politique-dist_pol1"><i class="fa fa-check"></i><b>3.2</b> La variable sur l’appartenance politique: dist_Pol1</a></li>
+<li class="chapter" data-level="3.3" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-du-nombre-de-navettes-inter-communes-nb_navettes"><i class="fa fa-check"></i><b>3.3</b> La variable du nombre de navettes inter-communes : nb_navettes</a></li>
+<li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
+<li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -127,11 +146,136 @@
 <li>arbre de décision</li>
 <li>boosting (adaboost)</li>
 <li>forêt aléatoire</li>
-<li>SVM</li>
-<li>Réseaux de neurones (plusieurs architectures)</li>
+<li>SVM (mais n’ont pas abouti)</li>
+<li>Réseaux de neurones
+<ul>
+<li>3 couches connectées de façon complète avec respectivement 10, 20 et 10 neurones</li>
+<li>4 couches connectées de façon complète avec respectivement 1024, 640, 120 et 12 neurones</li>
+</ul></li>
 </ul>
-<p>La fonction est appelée dans une boucle <code>foreach</code> qui permet de paraléliser les traitements pour chaque bloc. On a ainsi pu diviser les temps de calcul par 3 (pour les modèles entrainés sur nos postes) ou par 7 (pour les modèles entraînés sur un serveur). Le résultat de cette boucle est un dataframe contenant les prévisions faites par les différents modèles sur les blocs de tests.</p>
+<p>La fonction est appelée dans une boucle <code>foreach</code> qui permet de paraléliser les traitements pour chaque bloc. On a ainsi pu diviser les temps de calcul par 3 (pour les modèles entrainés sur nos postes) ou par 7 (pour les modèles entraînés sur un serveur). Le résultat de cette boucle est un dataframe contenant les prévisions (probabilités) faites par les différents modèles sur les blocs de tests.</p>
 <p>Les résultats sont présentés dans l’application shiny dédiée au projet (courbes ROC, indicateur AUC et matrices de confusion).</p>
+<p>Globalement, on constate que les modèles à base d’arbres de décisions donnent de meilleurs résultat : il semble que le choix de fusionner soit déterministe, et guidé les proximités en termes de vote des habitants (vote modéré ou extrême). On peut penser que cette variable détermine également les habitudes collaboratives des communes, c’est à dire leur appartenance à une même structure intercommunale (EPCI, SCOT), et que les communes ayant des électorats proches peuvent plus facilement se regrouper dans le cadre d’un projet commun.</p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<pre><code>## $ARBRE
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.9999
+## 
+## $FORET
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.9999
+## 
+## $DNN1
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.992
+## 
+## $DNN2
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.9008</code></pre>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-27-2.png" width="672" /></p>
+<pre><code>## $ARBRE
+## NULL
+## 
+## $FORET
+## NULL
+## 
+## $DNN1
+## NULL
+## 
+## $DNN2
+## NULL</code></pre>
+<pre><code>## $Y
+## [1] 1774
+## 
+## $ARBRE
+## [1] 1789
+## 
+## $FORET
+## [1] 1788
+## 
+## $DNN1
+## [1] 931
+## 
+## $DNN2
+## [1] 1043</code></pre>
+<p>L’arbre de décision seul produisant déjà des résultats très satisfaisants, les forêts aléatoires et adaboost l’améliorent, mais légèrement. Les autres méthodes sont moins performantes. La régression par exemple, ne met autant en avant le pouvoir discriminant de la proximité politique</p>
+<div id="htmlwidget-b46abc5e56604b463dce" style="width:100%;height:600px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b46abc5e56604b463dce">{"x":{"nodes":{"id":[1,2,3],"label":["dist_Pol1","0","1"],"level":[1,2,2],"color":["#F1B8C2","#7D91B6","#B9828C"],"value":[109082,107294,1788],"shape":["dot","square","square"],"title":["<div style=\"text-align:center;\">N% : <b>100%<\/b> (109082)<br>Complexity : <b>0.992<\/b><br><hr> 0 : <b>98.4%<\/b> (107308)<br>1 : <b>1.6%<\/b> (1774)<\/div>","<div style=\"text-align:center;\">N% : <b>98.4%<\/b> (107294)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>100%<\/b> (107294)<br>1 : <b>0%<\/b> (0)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> >= 0<\/div><\/div><\/div>","<div style=\"text-align:center;\">N% : <b>1.6%<\/b> (1788)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>0.8%<\/b> (14)<br>1 : <b>99.2%<\/b> (1774)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> < 0<\/div><\/div><\/div>"],"fixed":[true,true,true],"colorClust":["#7D91B6","#7D91B6","#B9828C"],"labelClust":["0","0","1"],"Leaf":[0,1,1],"font.size":[16,16,16],"scaling.min":[22.5,22.5,22.5],"scaling.max":[22.5,22.5,22.5]},"edges":{"id":["edge1","edge2"],"from":[1,1],"to":[2,3],"label":[">= 0","< 0"],"value":[107294,1788],"title":["<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\">>=0<\/div>","<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\"><0<\/div>"],"color":["#8181F7","#8181F7"],"font.size":[14,14],"font.align":["horizontal","horizontal"],"smooth.enabled":[true,true],"smooth.type":["cubicBezier","cubicBezier"],"smooth.roundness":[0.5,0.5]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"hierarchical":{"enabled":true,"direction":"UD"}},"interaction":{"dragNodes":false,"selectConnectedEdges":false,"tooltipDelay":500},"edges":{"scaling":{"label":{"enabled":false}}}},"groups":null,"width":"100%","height":"600px","idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)"},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"footer":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":50000,"to":0},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":true,"resetHighlight":true,"clusterOptions":{"fixed":true,"physics":false}},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;\n                      white-space: nowrap;\n                      font-family: cursive;font-size:12px;font-color:purple;background-color: #E6E6E6;\n                      border-radius: 15px;","OnceEvents":{"stabilized":"function() { \n        this.setOptions({layout:{hierarchical:false}, physics:{solver:'barnesHut', enabled:true, stabilization : false}, nodes : {physics : false, fixed : true}});\n    }"},"legend":{"width":0.1,"useGroups":false,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["dist_Pol1","0","1"],"color":["#F1B8C2","#7D91B6","#B9828C"],"shape":["dot","square","square"],"size":[22,22,22],"Leaf":[0,1,1],"font.size":[16,16,16],"id":[10000,10001,10002]},"nodesToDataframe":true},"tree":{"updateShape":true,"shapeVar":"dot","shapeY":"square","colorVar":{"variable":["dist_Pol1"],"color":["#F1B8C2"]},"colorY":{"colorY":{"modality":["0","1"],"color":["#7D91B6","#B9828C"]},"vardecidedClust":["0","0","1"]}},"export":{"type":"png","css":"float:right;-webkit-border-radius: 10;\n                  -moz-border-radius: 10;\n                  border-radius: 10px;\n                  font-family: Arial;\n                  color: #ffffff;\n                  font-size: 12px;\n                  background: #090a0a;\n                  padding: 4px 8px 4px 4px;\n                  text-decoration: none;","background":"#fff","name":"network.png","label":"Export as png"}},"evals":["OnceEvents.stabilized"],"jsHooks":[]}</script>
+<pre><code>## 
+## Call:
+## glm(formula = y ~ ., family = binomial, data = baseML)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.0191   0.0000   0.0000   0.0000   0.7418  
+## 
+## Coefficients: (1 not defined because of singularities)
+##                      Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)         1.184e+01  4.877e+02   0.024   0.9806  
+## dep1                1.457e+00  1.602e+03   0.001   0.9993  
+## ze1                 1.705e+01  1.515e+03   0.011   0.9910  
+## bv1                 4.872e+00  1.923e+02   0.025   0.9798  
+## au1                -1.450e+00  7.374e-01  -1.967   0.0492 *
+## epci20141          -9.486e+00  8.016e+01  -0.118   0.9058  
+## epci20161          -1.151e+01  8.198e+01  -0.140   0.8883  
+## scot1              -7.740e+00  1.682e+01  -0.460   0.6454  
+## plui1               1.334e+00  7.452e-01   1.790   0.0735 .
+## dist_P13_POP       -6.684e+00  1.140e+01  -0.586   0.5575  
+## dist_SUPERF        -4.564e+00  1.980e+00  -2.305   0.0212 *
+## dist_P13_MEN       -1.258e+01  1.105e+01  -1.139   0.2547  
+## dist_P13_LOG        1.251e+01  6.525e+00   1.917   0.0553 .
+## dist_P13_RP                NA         NA      NA       NA  
+## dist_P13_RSECOCC   -6.543e-01  1.250e+00  -0.523   0.6007  
+## dist_P13_LOGVAC    -2.153e+00  1.451e+00  -1.484   0.1379  
+## dist_P13_RP_PROP    1.141e+01  6.553e+00   1.742   0.0816 .
+## dist_P13_EMPLT     -1.965e+00  3.953e+00  -0.497   0.6190  
+## dist_P13_EMPLT_SAL  1.088e+00  3.395e+00   0.321   0.7486  
+## dist_P13_POP1564   -2.263e+01  1.330e+01  -1.701   0.0889 .
+## dist_P13_CHOM1564  -2.185e+00  1.913e+00  -1.142   0.2533  
+## dist_P13_ACT1564    1.891e+01  1.060e+01   1.784   0.0744 .
+## dist_ETTOT14        2.597e+00  3.689e+00   0.704   0.4814  
+## dist_ETAZ14         8.393e-01  1.360e+00   0.617   0.5371  
+## dist_ETFZ14        -1.533e+00  1.175e+00  -1.305   0.1920  
+## dist_ETGU14         5.594e-01  2.023e+00   0.276   0.7822  
+## dist_ETOQ14         1.419e+00  1.540e+00   0.922   0.3567  
+## dist_ETTEF114      -9.311e-01  1.634e+00  -0.570   0.5689  
+## dist_revmoy         2.917e+00  7.553e+00   0.386   0.6994  
+## dist_pot_fin        2.720e+00  4.750e+00   0.573   0.5669  
+## dist_Pol1          -5.324e+03  7.187e+03  -0.741   0.4588  
+## dist_Pol2          -3.438e+03  5.901e+03  -0.583   0.5601  
+## dist_evol_pop       2.786e+00  7.255e+00   0.384   0.7009  
+## dist_densite        1.519e+00  1.628e+00   0.933   0.3508  
+## dist_evol_empl      3.608e+00  3.031e+00   1.190   0.2340  
+## nb_locprop         -3.050e-02  8.604e-02  -0.354   0.7230  
+## nb_RS               4.327e-01  5.531e-01   0.782   0.4340  
+## nb_mig             -2.062e-02  4.254e-02  -0.485   0.6279  
+## nb_navettes         1.252e-02  1.878e-02   0.667   0.5050  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 18132.72  on 109081  degrees of freedom
+## Residual deviance:   122.83  on 109044  degrees of freedom
+## AIC: 198.83
+## 
+## Number of Fisher Scoring iterations: 25</code></pre>
 
 </div>
             </section>
@@ -139,8 +283,8 @@
           </div>
         </div>
       </div>
-<a href="analyse-des-features.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="analyse-des-features.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="conclusion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -181,6 +325,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

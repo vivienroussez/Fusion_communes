@@ -1,10 +1,6 @@
 
 ## Calcul de l'indicateur de fusion
 
-```{r}
-plot(iris)
-```
-
 Etant donné que nous cherchons à prédire la fusion des couples de communes, nous allons créer une variable indicatrice de fusion.
 Pour cela, nous utilisons de nouveau le package COGugaison.
 

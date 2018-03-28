@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-25">
+<meta name="date" content="2018-03-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,6 +47,15 @@
 
 
 
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
+<link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
+<script src="libs/vis-4.20.1/vis.min.js"></script>
+<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
+<script src="libs/FileSaver-1.1.20151003/FileSaver.min.js"></script>
+<script src="libs/Blob-1.0/Blob.js"></script>
+<script src="libs/canvas-toBlob-1.0/canvas-toBlob.js"></script>
+<script src="libs/html2canvas-0.5.0/html2canvas.js"></script>
+<script src="libs/jspdf-1.3.2/jspdf.debug.js"></script>
 
 
 
@@ -66,7 +75,10 @@
 <li><a href="./">Prévoir les fusions de communes</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#pourquoi-ce-sujet"><i class="fa fa-check"></i><b>1.1</b> Pourquoi ce sujet ?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#pourquoi-pas-les-autres"><i class="fa fa-check"></i><b>1.2</b> Pourquoi pas les autres ?</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html"><i class="fa fa-check"></i><b>2</b> Contitution de la base de données</a><ul>
 <li class="chapter" data-level="2.1" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#creation-des-couples-de-communes"><i class="fa fa-check"></i><b>2.1</b> Création des couples de communes</a></li>
 <li class="chapter" data-level="2.2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#indicateurs-communaux-mobilises"><i class="fa fa-check"></i><b>2.2</b> Indicateurs communaux mobilisés</a></li>
@@ -82,8 +94,15 @@
 <li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
 <li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a></li>
+<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a><ul>
+<li class="chapter" data-level="3.1" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-de-distance-sur-la-population-dist_p13_pop"><i class="fa fa-check"></i><b>3.1</b> La variable de distance sur la population: dist_P13_POP</a></li>
+<li class="chapter" data-level="3.2" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-sur-lappartenance-politique-dist_pol1"><i class="fa fa-check"></i><b>3.2</b> La variable sur l’appartenance politique: dist_Pol1</a></li>
+<li class="chapter" data-level="3.3" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-du-nombre-de-navettes-inter-communes-nb_navettes"><i class="fa fa-check"></i><b>3.3</b> La variable du nombre de navettes inter-communes : nb_navettes</a></li>
+<li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
+<li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -105,7 +124,285 @@
             <section class="normal" id="section-">
 <div id="analyse-des-features" class="section level1">
 <h1><span class="header-section-number">Chapitre 3</span> Analyse des features</h1>
+<p>Nous regardons la distribution d’une variable de chaque grande famille de données</p>
+<div id="la-variable-de-distance-sur-la-population-dist_p13_pop" class="section level2">
+<h2><span class="header-section-number">3.1</span> La variable de distance sur la population: dist_P13_POP</h2>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>On constate qu’il y a beaucoup de couple de communes qui ont une faible différence de population lors de la non-fusion. On retrouve le cas pour les communes rurales ou les grandes villes.</p>
+</div>
+<div id="la-variable-sur-lappartenance-politique-dist_pol1" class="section level2">
+<h2><span class="header-section-number">3.2</span> La variable sur l’appartenance politique: dist_Pol1</h2>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>On constate, sur les non-fusions, une grande disparité des valeurs, ce qui n’est pas le cas pour la fusion. Ce qui confirmerait que les communes ayant fusionné ont une même tendance politique.</p>
+</div>
+<div id="la-variable-du-nombre-de-navettes-inter-communes-nb_navettes" class="section level2">
+<h2><span class="header-section-number">3.3</span> La variable du nombre de navettes inter-communes : nb_navettes</h2>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Nous sommes passés au logarithme afin de mieux visualiser la distribution, très asymétrique.</p>
+</div>
+<div id="matrice-des-correlations" class="section level2">
+<h2><span class="header-section-number">3.4</span> Matrice des corrélations</h2>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>On constate qu’il n’y a pas de corrélations linéaires entre les variables de distances et les variables de nb. On voit qu’il y a des corrélations entre certaines variables. Par exemple, dist_P13_POP et dist_P13_LOC.</p>
+<p>On garde toutes les variables afin de ne pas supprimer de la variance.</p>
+<p>Avant de lancer les méthodes de ML, nous allons faire du clustering afin de voir s’il n’existerait pas de clusters de couples de communes.</p>
+</div>
+<div id="clustering" class="section level2">
+<h2><span class="header-section-number">3.5</span> Clustering</h2>
+<p>Etant donné le nombre important de lignes et la faible capacité de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions ?galement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l’inertie interclasse (alors que le k-means minimise l’inertie intraclasse)</p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>On voit que la variance intraclasse stagne à partir de 6 classes.<br />
+On voit qu’avec les 6 classes, on retrace près de 90% de la variance totale</p>
+<p>On affecte, à chaque couple de communes, son cluster d’appartenance et on regarde dans chaque cluster la répartition de la variable fusion</p>
+<pre><code>##            
+##             Fusion Non Fusion    Sum
+##   cluster 1      5        333    338
+##   cluster 2      0         77     77
+##   cluster 3     11       1832   1843
+##   cluster 4      0          8      8
+##   cluster 5      0         20     20
+##   cluster 6   1758     105038 106796
+##   Sum         1774     107308 109082</code></pre>
+<p>On constate que le cluster 1 contient la quasi-totalité des fusions. De plus, cette classe est marquée est consituée par les couples de communes les plus semblables :</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">cl_class</th>
+<th align="right">dist_P13_POP</th>
+<th align="right">dist_SUPERF</th>
+<th align="right">dist_P13_MEN</th>
+<th align="right">dist_P13_LOG</th>
+<th align="right">dist_P13_RP</th>
+<th align="right">dist_P13_RSECOCC</th>
+<th align="right">dist_P13_LOGVAC</th>
+<th align="right">dist_P13_RP_PROP</th>
+<th align="right">dist_P13_EMPLT</th>
+<th align="right">dist_P13_EMPLT_SAL</th>
+<th align="right">dist_P13_POP1564</th>
+<th align="right">dist_P13_CHOM1564</th>
+<th align="right">dist_P13_ACT1564</th>
+<th align="right">dist_ETTOT14</th>
+<th align="right">dist_ETAZ14</th>
+<th align="right">dist_ETFZ14</th>
+<th align="right">dist_ETGU14</th>
+<th align="right">dist_ETOQ14</th>
+<th align="right">dist_ETTEF114</th>
+<th align="right">dist_revmoy</th>
+<th align="right">dist_pot_fin</th>
+<th align="right">dist_Pol1</th>
+<th align="right">dist_Pol2</th>
+<th align="right">dist_evol_pop</th>
+<th align="right">dist_densite</th>
+<th align="right">dist_evol_empl</th>
+<th align="right">nb_locprop</th>
+<th align="right">nb_RS</th>
+<th align="right">nb_mig</th>
+<th align="right">nb_navettes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">cluster 1</td>
+<td align="right">0.6528698</td>
+<td align="right">0.4429754</td>
+<td align="right">0.6713167</td>
+<td align="right">0.6772515</td>
+<td align="right">0.6713167</td>
+<td align="right">0.7720173</td>
+<td align="right">0.7383863</td>
+<td align="right">0.6068453</td>
+<td align="right">0.7092862</td>
+<td align="right">0.7117465</td>
+<td align="right">0.6596341</td>
+<td align="right">0.7060974</td>
+<td align="right">0.6525772</td>
+<td align="right">0.6900375</td>
+<td align="right">0.5166939</td>
+<td align="right">0.6292465</td>
+<td align="right">0.6988026</td>
+<td align="right">0.7117091</td>
+<td align="right">0.6946497</td>
+<td align="right">0.0946899</td>
+<td align="right">0.6645955</td>
+<td align="right">0.4251332</td>
+<td align="right">0.5655192</td>
+<td align="right">0.0245313</td>
+<td align="right">0.4671913</td>
+<td align="right">0.0378124</td>
+<td align="right">409.076923</td>
+<td align="right">39.1775148</td>
+<td align="right">402.425777</td>
+<td align="right">2254.08311</td>
+</tr>
+<tr class="even">
+<td align="left">cluster 2</td>
+<td align="right">0.7717572</td>
+<td align="right">0.5548627</td>
+<td align="right">0.7889639</td>
+<td align="right">0.7954441</td>
+<td align="right">0.7889639</td>
+<td align="right">0.8777274</td>
+<td align="right">0.8486011</td>
+<td align="right">0.7325376</td>
+<td align="right">0.8183085</td>
+<td align="right">0.8191151</td>
+<td align="right">0.7817643</td>
+<td align="right">0.8124234</td>
+<td align="right">0.7780262</td>
+<td align="right">0.8114469</td>
+<td align="right">0.6182068</td>
+<td align="right">0.7603281</td>
+<td align="right">0.8206782</td>
+<td align="right">0.8056679</td>
+<td align="right">0.8133097</td>
+<td align="right">0.1048239</td>
+<td align="right">0.7846550</td>
+<td align="right">0.3045638</td>
+<td align="right">0.6232960</td>
+<td align="right">0.0221584</td>
+<td align="right">0.4138208</td>
+<td align="right">0.0270296</td>
+<td align="right">1084.038961</td>
+<td align="right">99.2597403</td>
+<td align="right">909.003520</td>
+<td align="right">5286.95352</td>
+</tr>
+<tr class="odd">
+<td align="left">cluster 3</td>
+<td align="right">0.5692132</td>
+<td align="right">0.3751107</td>
+<td align="right">0.5846876</td>
+<td align="right">0.5891793</td>
+<td align="right">0.5846876</td>
+<td align="right">0.6257900</td>
+<td align="right">0.6416092</td>
+<td align="right">0.5262392</td>
+<td align="right">0.6471399</td>
+<td align="right">0.6536227</td>
+<td align="right">0.5689283</td>
+<td align="right">0.6269799</td>
+<td align="right">0.5638316</td>
+<td align="right">0.5939463</td>
+<td align="right">0.4518727</td>
+<td align="right">0.5480083</td>
+<td align="right">0.6067305</td>
+<td align="right">0.6319027</td>
+<td align="right">0.6147784</td>
+<td align="right">0.0911368</td>
+<td align="right">0.5936009</td>
+<td align="right">0.4275222</td>
+<td align="right">0.5645617</td>
+<td align="right">0.0275561</td>
+<td align="right">0.4638924</td>
+<td align="right">0.0519686</td>
+<td align="right">118.395551</td>
+<td align="right">11.9506240</td>
+<td align="right">131.788638</td>
+<td align="right">643.78620</td>
+</tr>
+<tr class="even">
+<td align="left">cluster 4</td>
+<td align="right">0.8820297</td>
+<td align="right">0.8510783</td>
+<td align="right">0.8919122</td>
+<td align="right">0.8957517</td>
+<td align="right">0.8919122</td>
+<td align="right">0.9331496</td>
+<td align="right">0.9084888</td>
+<td align="right">0.8826418</td>
+<td align="right">0.9006597</td>
+<td align="right">0.8969974</td>
+<td align="right">0.8857381</td>
+<td align="right">0.8730461</td>
+<td align="right">0.8853207</td>
+<td align="right">0.9236429</td>
+<td align="right">0.9439857</td>
+<td align="right">0.8665048</td>
+<td align="right">0.9279170</td>
+<td align="right">0.9216889</td>
+<td align="right">0.9289184</td>
+<td align="right">0.1962382</td>
+<td align="right">0.8913489</td>
+<td align="right">0.1345052</td>
+<td align="right">0.7434921</td>
+<td align="right">0.0125245</td>
+<td align="right">0.1722364</td>
+<td align="right">0.0317686</td>
+<td align="right">5742.625000</td>
+<td align="right">678.7500000</td>
+<td align="right">3299.405619</td>
+<td align="right">26673.71041</td>
+</tr>
+<tr class="odd">
+<td align="left">cluster 5</td>
+<td align="right">0.8483371</td>
+<td align="right">0.6820082</td>
+<td align="right">0.8692100</td>
+<td align="right">0.8750354</td>
+<td align="right">0.8692100</td>
+<td align="right">0.9494309</td>
+<td align="right">0.9127921</td>
+<td align="right">0.8267928</td>
+<td align="right">0.8472004</td>
+<td align="right">0.8427063</td>
+<td align="right">0.8574374</td>
+<td align="right">0.8595356</td>
+<td align="right">0.8530972</td>
+<td align="right">0.8874141</td>
+<td align="right">0.7631278</td>
+<td align="right">0.8218592</td>
+<td align="right">0.8943663</td>
+<td align="right">0.8883098</td>
+<td align="right">0.8812697</td>
+<td align="right">0.1623373</td>
+<td align="right">0.8511275</td>
+<td align="right">0.2511565</td>
+<td align="right">0.6189600</td>
+<td align="right">0.0133818</td>
+<td align="right">0.3522964</td>
+<td align="right">0.0246086</td>
+<td align="right">2305.850000</td>
+<td align="right">206.8500000</td>
+<td align="right">1673.812391</td>
+<td align="right">12578.32912</td>
+</tr>
+<tr class="even">
+<td align="left">cluster 6</td>
+<td align="right">0.3948445</td>
+<td align="right">0.2906449</td>
+<td align="right">0.3956746</td>
+<td align="right">0.3882293</td>
+<td align="right">0.3956746</td>
+<td align="right">0.4130290</td>
+<td align="right">0.4612233</td>
+<td align="right">0.3785998</td>
+<td align="right">0.5022158</td>
+<td align="right">0.5629996</td>
+<td align="right">0.3927604</td>
+<td align="right">0.4470152</td>
+<td align="right">0.3909049</td>
+<td align="right">0.3974463</td>
+<td align="right">0.3622695</td>
+<td align="right">0.4939238</td>
+<td align="right">0.4618564</td>
+<td align="right">0.4290194</td>
+<td align="right">0.4555829</td>
+<td align="right">0.0646239</td>
+<td align="right">0.4128903</td>
+<td align="right">0.4546936</td>
+<td align="right">0.5442040</td>
+<td align="right">0.0437398</td>
+<td align="right">0.3158759</td>
+<td align="right">0.1297288</td>
+<td align="right">3.129986</td>
+<td align="right">0.5201225</td>
+<td align="right">4.440111</td>
+<td align="right">15.21377</td>
+</tr>
+</tbody>
+</table>
 
+</div>
 </div>
             </section>
 
@@ -154,6 +451,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

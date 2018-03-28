@@ -28,9 +28,7 @@ lapply(prev,function(x) sum(x>.5))
 
 arbre <- rpart(data=baseML,y~.)
 visTree(arbre)
-
 glm(data=baseML,formula = y~.,family=binomial) %>% summary()
-summary(g)
 
 save(prev,prev.roc,prev.conf,file="DiagML.RData")
 

@@ -113,14 +113,14 @@ La représentation cartographique de ces axes factoriels :
 par(mfrow=c(1,2),mar=c(.5,.5,1.5,.5))
 coord <- data.frame(codgeo=row.names(afc$row$coord),afc$row$coord)
 map <- merge(mapCom,coord,by.x="codgeo",by.y="codgeo",all.x=T)
-# choroLayer(map,var="Dim.1",nclass = 8,border=NA,legend.pos = "n")
-# title("Modérés (clair) vs extrêmes (foncé)")
-# choroLayer(map,var="Dim.2",nclass = 8,border=NA,legend.pos = "n")
-# title("Gauche (foncé) vs Droite (clair)")
-# choroLayer(map,var="Dim.3",nclass = 8,border=NA,legend.pos = "n")
-# title("Vote Lassalle")
-# choroLayer(map,var="Dim.4",nclass = 8,border=NA,legend.pos = "n")
-# title("Vote Dupont-Aignan")
+choroLayer(map,var="Dim.1",nclass = 8,border=NA,legend.pos = "n")
+title("Modérés (clair) vs extrêmes (foncé)")
+choroLayer(map,var="Dim.2",nclass = 8,border=NA,legend.pos = "n")
+title("Gauche (foncé) vs Droite (clair)")
+choroLayer(map,var="Dim.3",nclass = 8,border=NA,legend.pos = "n")
+title("Vote Lassalle")
+choroLayer(map,var="Dim.4",nclass = 8,border=NA,legend.pos = "n")
+title("Vote Dupont-Aignan")
 ```
 
 ### Synthèse : typologie communale

@@ -60,11 +60,11 @@ On voit qu'il y a des corrélations entre certaines variables. Par exemple, dist
 
 On garde toutes les variables afin de ne pas supprimer de la variance.  
 
-Avant de lancer les m?thodes de ML, nous allons faire du clustering afin de voir s'il n'existerait pas de clusters de couples de communes.
+Avant de lancer les méthodes de ML, nous allons faire du clustering afin de voir s'il n'existerait pas de clusters de couples de communes.
 
 ## Clustering
 
-Etant donné le nombre important de lignes et la faible capacit? de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions ?galement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l'inertie interclasse (alors que le k-means minimise l'inertie intraclasse)
+Etant donné le nombre important de lignes et la faible capacité de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions ?galement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l'inertie interclasse (alors que le k-means minimise l'inertie intraclasse)
 
 ```{r}
 library(dplyr)
