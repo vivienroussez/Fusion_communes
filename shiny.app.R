@@ -22,19 +22,13 @@ library(tidyverse)
 library(pROC)
 
 ## les données shiny
-
+k=1000
 
 
 
 #addMarkers(lng=174.768, lat=-36.852, label="test")
 
 
-
-
-
-data("cars")
-
-tab <- cars
 
 
 # Define UI for application that draws a histogram
@@ -48,8 +42,8 @@ ui <- dashboardPage(skin = "blue",
           menuItem("Analyse Descriptive", tabName = "dashboard1", icon = icon("dashboard")),
           menuItem("Modélisation", tabName = "dashboard2", icon = icon("dashboard")),
           menuItem("Population Par commune", tabName = "dashboard3", icon = icon("dashboard")),
-          menuItem("Les communes Fusionnées", tabName = "dashboard4", icon = icon("dashboard"))
-      
+          menuItem("Les communes Fusionnées", tabName = "dashboard4", icon = icon("dashboard")),
+          sliderInput('k','Population maximale par Commune:',min=100,max=10000,value=1000)
     )),
 
     # Body Content ***********************************************************************************************************
@@ -68,10 +62,13 @@ ui <- dashboardPage(skin = "blue",
                       # The id lets us use input$tabset1 on the server to find the current tab
                       id = "tabset1", height = "400px",width = 12,
                       
-                      tabPanel("Un peu d'histoire !  ",textOutput("L1"),textOutput("L2"))
-                            
+                      tabPanel("Un peu d'histoire !  ",textOutput("L1"),textOutput("L2")),
                              
-                  )),
+                  
+                      tabPanel("dist population  ", plotOutput("POP1", height = 200, width="80%")),
+                      tabPanel("dist politique   ", plotOutput("POL", height = 200, width="80%")),
+                      tabPanel("dist Navette  ", plotOutput("NAV", height = 200, width="80%")))
+                  ),
                   
                     
                    
@@ -80,9 +77,9 @@ ui <- dashboardPage(skin = "blue",
                     fluidRow(
                       valueBox(109082, "Couples de Communes", icon = icon("List"),width=4,color="light-blue"),
                    
-                      valueBox(1774, "Fusions", icon = icon("List"), width=4,color="yellow"),
+                      valueBox(1774, "1,6% Fusions", icon = icon("List"), width=4,color="black"),
                   
-                     valueBox(2016, "Historique depuis", icon = icon("List"), width=4,color="light-blue")
+                     valueBox(2015, "Historique depuis", icon = icon("List"), width=4,color="light-blue")
                    )
                    ),
             
@@ -130,15 +127,17 @@ ui <- dashboardPage(skin = "blue",
                       
           
           # third tab content*********************************************
-          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 400
-                  ),box(
-                    title = "",
-                    width = "100%",
-                    background = "black",
-                    checkboxGroupInput("Pop", "Population",
-                                   choices = c(100,1000,10000)
-                                   )
-                    
+          tabItem(tabName = "dashboard3",leafletOutput("ZONE33", width = "100%", height = 600
+                  
+                  
+                    # box(
+                    # title = "",
+                    # width = "100%",
+                    # background = "black",
+                    # selectInput("k", "Population",
+                    #                choices = c(100,1000,10000),
+                    #                selected = 1000)
+
                     #sliderInput("Pop", "Population :", min=1,max=1000,value=100)
                   )),
           # fourth tab content *********************************************
@@ -162,11 +161,15 @@ server <- function(input, output) {
     jusqu'alors distinctes. La procédure de fusion fait l'objet des articles L. 2113-1 à L. 2113-5,
     L. 2113-9, L. 2113-11 et L. 2113-12 du Code général des collectivités territoriales (CGCT)."
   })
+  
   output$L2<-renderText({
-    "La fusion de() communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
+    "La fusion de communes ne peut intervenir qu'entre communes limitrophes et entraîne la disparition de la personnalité 
      morale de l'ensemble des communes concernées pour donner naissance à une personne juridique nouvelle et différente. "
   })
-  
+  output$POP1<-renderPlot({
+                          ggplot(dat1,aes(x=fusion,y=dist_P13_POP))+geom_violin()+geom_boxplot(width=0.1)})
+  output$POL<-renderPlot({ggplot(dat1,aes(x=fusion,y=dist_Pol1))+geom_violin()+geom_boxplot(width=0.1)})
+    output$NAV<-renderPlot({ggplot(dat1,aes(x=fusion,y=log(nb_navettes)))+geom_violin()+geom_boxplot(width=0.1)})
   
   # First tab content*********************************************
   output$plot1 <- renderPlot({
@@ -256,15 +259,41 @@ server <- function(input, output) {
   })
   
   ##### dashboard 4 communes par popolation 
+  
+  ### CODE préparation carte ###########
+  
+  com <- st_read("Sources/com_15.shp")
+  # On va prendre le fonds généralisé pour gagner un peu de place, à la place du fonds IGN
+  proj <- st_crs(mapCom)
+  st_crs(com) <- proj
+  com <- st_transform(com,3857) # projection en mercator
+  
+ 
+  ################
+  
   #Cartefull<-mapview(mapCom[1:4000,], col.regions = sf.colors(360))
-  CartePOP <- (merge(select(datacomm,"CODGEO","P13_POP"),mapCom, by.x="CODGEO",by.y="codgeo"))
-  x<-select(datacomm,"CODGEO","P13_POP")
-  y<-select(mapCom,"codgeo","geometry")
-  CartePOP <- (merge(x,y, by.x="CODGEO",by.y="codgeo"))
-  m<-reactive(CartePOP[CartePOP$P13_POP>input$Pop,"geometry"])
-  output$ZONE33<-renderLeaflet(
-  #leaflet(m))
-    Carte)
+  #CartePOP <- select(mapCom,"codgeo","P13_POP")
+  #m <- st_transform(mapCom, "+proj=longlat +datum=WGS84") %>% select(codgeo,P13_POP)%>%filter(.,P13_POP>k))
+  
+ # m1<-reactive(filter(CartePOP,CartePOP$P13_POP>input$Pop))
+  m<- eventReactive(input$k,{ st_transform(mapCom, "+proj=longlat +datum=WGS84") %>% select(codgeo,P13_POP)%>%filter(.,P13_POP<input$k)})
+  
+  
+   output$ZONE33<-renderLeaflet(
+                                map<-leaflet()%>% addProviderTiles(providers$OpenStreetMap.France)%>%setView(7.3,48,zoom=5)
+                               
+    )
+    
+    observeEvent(input$k,{
+      print(m())
+      v <- m()
+      leafletProxy('ZONE33')%>%addPolygons(data=v,color = rainbow(20))
+    })
+    
+   # m<-filter(CartePOP,CartePOP$P13_POP> 10000)%>%
+    #leaflet()%>%addTiles()%>%addPolygons(data=m)
+  
+  #   
   }
 
 # Run the application 
