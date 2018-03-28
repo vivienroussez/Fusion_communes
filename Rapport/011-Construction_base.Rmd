@@ -10,7 +10,7 @@ Pour nourrir le modèle de machine learning, nous avons procédé en plusieurs �
 - Identification des couples de communes contigües (seules susceptibles de fusionner)
 - Constitution d'indicateurs de dissimilarités pour chacun de ces couples
     + Collecte d'indicateurs communaux donnant les caractéristiques démographiques, sociales, économiques des territoire
-    + Calcul de la distance euclidienne entre chacun des couples sur la base de chacun de ces indicateurs
+    + Calcul de la distance entre chacun des couples sur la base de chacun de ces indicateurs. La distance est calculée par la formule $ d(i,j)=\dfrac{|x_i-x_j|}{|x_i|+|x_j|} $
 - Ajout d'indicateurs de **flux**, permettant de mesurer l'intensité des échanges (essentiellement de nature économique)
 - Ajout de variables binaires pour les couples appartenant à un même zonage administratif ou d'étude
 

@@ -175,19 +175,19 @@ predit <- function(bloc.actif,don=dat) # Prend en para le DF en entrée et le bl
   # nn2.prev <- sapply(nn2.prev$probabilities,function(x) x[2])
 
   prev <- data.frame(Y=test$y,GLM=mco.prev,BestGLM=mco.step.prev,lasso=lasso.prev,ridge=ridge.prev,elastic=elastic.prev,
-                   DNN=nn.prev,ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
+                   ada=ada.prev,arbre=arbre.prev,foret=rf.prev)
 
   # prev <- data.frame(SVM.lin=svm.prev,SVM.rad=svm.prev.rad)
-  prev <- data.frame(DNN1=nn1.prev,DNN2=nn2.prev)
+  # prev <- data.frame(DNN1=nn1.prev,DNN2=nn2.prev)
   # modeles <- list(MCO=mco,MCO.step=mco.step,RIDGE=ridge,LASSO=lasso,ELAST=elastic,ARBRE=arbre,BOOST=ada,FORET=rf,DNN=nn.eval)
   res <- prev
   return(res)
   
 }
-# 
+
 # system.time(
 #   predit(bloc.actif = 1,don=don)
-#   
+# 
 # )
 
 cl <- makeCluster(detectCores()-1) # ouverture du cluster
