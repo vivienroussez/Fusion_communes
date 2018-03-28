@@ -1,0 +1,15 @@
+
+# Conclusion
+
+Le choix des communes de fusionner apparaît donc comme largement détemriniste : les habitudes anciennes de travail en commun des communes dans des structures administratives priment les ressemblances sur le plan socio-économiques et les flux qui les unissent.C'est pourquoi les modèles basés sur des arbres de décisionsont à même de prédire de façon très fidèle les fusions de communes
+
+Après ce travail, plusieurs pistes pourraient être explorées pour en augmenter la portée :
+
+- Appliquer le résultat de ces modèles sur les données plus récentes portant sur le millésime 2017 de la géographie communale
+- Restreindre le machine learning au seul cluster de couples de communes très semblables
+- Dupliquer, avec brouillage, les lignes correspondant aux couple fusionnés dans la base d'apprentissage
+- Traiter les données aberrantes et influentes, faire un peu plus de feature ingineering pour augementer la qualité des modèles basés sur la régression
+- Implémenter les SVM
+- Faire la partie ML sous python ...?
+
+
