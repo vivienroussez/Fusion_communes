@@ -1,6 +1,10 @@
 
 ## Calcul de l'indicateur de fusion
 
+```{r}
+plot(iris)
+```
+
 Etant donné que nous cherchons à prédire la fusion des couples de communes, nous allons créer une variable indicatrice de fusion.
 Pour cela, nous utilisons de nouveau le package COGugaison.
 
@@ -14,11 +18,13 @@ PASSAGE_2016_2017_insee<-PASSAGE_2016_2017_insee
 ```
 
 Puis, nous filtrons uniquement sur les fusions.
+
 ```{r}
 fusion_2016_2017<-filter(PASSAGE_2016_2017_insee,typemodif=="f")
 ```
 
 Nous splitons les bases afin de recréer les couples de communes et nous ne gardons que les couples différents 
+
 ```{r}
 ##création d'un indicateur de fusion selon l'année
 temp<-split(fusion_2016_2017,fusion_2016_2017$cod2017)
@@ -36,11 +42,10 @@ fusion_2016_2017_bis$fusion_2016<-1
 couples_ebh<-merge(couples,fusion_2016_2017_bis,
                    by.x=c("codgeo1","codgeo2"),by.y=c("Var1","Var2"),all.x=T)
 couples_ebh$fusion_2016<-ifelse(is.na(couples_ebh$fusion_2016),yes=0,no=couples_ebh$fusion_2016)
-
-
 ```
 
 Nous avons donc:
+
 ```{r}
 f2015<-as.data.frame(table(base$fusion_2015))
 names(f2015)<-c("type_fusion","annee_2015_2016")
@@ -56,4 +61,5 @@ fglobal_bis<-merge(fglobal_bis,f2016,by.x="type_fusion",all.x=T)
 fglobal_bis
 
 ```
-Les fusions repr�sentent 1 774 couples de communes sur 109 082 au total soit 1,6% de la base. Ce qui est tr�s faible.  
+
+Les fusions représentent 1 774 couples de communes sur 109 082 au total soit 1,6 % de la base. Ce qui est très faible.  

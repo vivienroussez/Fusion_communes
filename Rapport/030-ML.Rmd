@@ -1,9 +1,9 @@
 
 # Modélisation de la probabilité de fusionner
 
-<!-- ```{r} -->
-<!-- load("../Base.RData") -->
-<!-- ``` -->
+```{r}
+load("../Base.RData")
+```
 
 
 Après nettoyage et sélection des features, la base de données pour exécuter le machine learning est donc constituée de 109082 observations et de 38 variables explicatives.

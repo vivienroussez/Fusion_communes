@@ -10,8 +10,12 @@ link-citations: yes
 description: "Rapport pour la formation du CEPE en datascience"
 ---
 
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = T, message=F, error=F,warning=F)
+```
 
-```{r,echo=FALSE}
+```{r}
 require(tidyverse)
 require(spdep)
 require(sf)
@@ -32,9 +36,11 @@ require(cartography)
 
 # Introduction
 
+```{r}
+plot(iris)
+```
 
-
-![](img/Illustr.png)
+<!-- ![](img/Illustr.png) -->
 
 En 2015, le projet de loi sur l'amélioration de la commune nouvelle est adopté. La même année, la loi pour une Nouvelle Organisation territoriale de la République (Notr) renforce les compétences des Régions et établissement publics de coopération intercommunale (EPCI, soit les communautés d'agglomération, de communes, etc...). Ces mesures  interviennent dans un contexte de réformé territoriale visant à rationaliser les dotations de l'Etat afin d'augmenter la capacité des régions à entrer dans la compétition internationale, et de ernforcer la coopération entre communes afin de développer la mutualisation des services et réaliser des économies d'échelle.
 
@@ -43,8 +49,5 @@ Par ailleurs, la France, avec près de 36 800 communes en 2015, regroupe à elle
 Depuis l'adoption de cette loi, on comptabilise près de 1750 fusions de communes, ce qui représente une baisse significative du nombre de collectivité, même si cela reste relativement modeste par rapport à la baisse du nombre de municipalités dans les autres pays européens, amorcée dès 1950 (jusqu'à -92 % au Danemark !).
 
 
-```{r setup, include=FALSE}
-rm(list=ls())
-knitr::opts_chunk$set(echo = F, message=F, error=F,warning=F)
-```
+
 

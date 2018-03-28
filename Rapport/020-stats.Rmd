@@ -1,44 +1,47 @@
 
 # Analyse des features
 
-Nous regardons la distribution d'une variable de chaque grande famille de donnÈes
+Nous regardons la distribution d'une variable de chaque grande famille de donn√©es
 
 ```{r}
 load("../Base.RData")
 #On met en facteur la variable de fusion
 dat1 <- baseML
 dat1$fusion<-as.factor(dat1$y)
-#on crËe un identifiant
+#on cr√©e un identifiant
 dat1$indic<-rownames(dat1)
 ```
 
 
 ## La variable de distance sur la population: dist_P13_POP
+
 ```{r}
 library(ggplot2)
 ggplot(dat1,aes(x=fusion,y=dist_P13_POP))+geom_violin()+geom_boxplot(width=0.1)
 ```
 
-On constate qu'il y a beaucoup de couple de communes qui ont une faible diffËrence de population lors de la non-fusion. On retrouve le cas pour les communes rurales ou les grandes villes.  
+On constate qu'il y a beaucoup de couple de communes qui ont une faible diff√©rence de population lors de la non-fusion. On retrouve le cas pour les communes rurales ou les grandes villes.  
 
 ## La variable sur l'appartenance politique: dist_Pol1
+
 ```{r}
 ggplot(dat1,aes(x=fusion,y=dist_Pol1)) + geom_violin() + geom_boxplot(width=0.1) +
   xlab("Fusion") + ylab("Part de couples de communes")
 ```
 
-On constate, sur les non-fusions, une grande disparitÈ des valeurs, ce qui n'est pas le cas pour la fusion. Ce qui confirmerait que les communes ayant fusionnÈ ont une mÍme tendance politique.  
+On constate, sur les non-fusions, une grande disparit√© des valeurs, ce qui n'est pas le cas pour la fusion. Ce qui confirmerait que les communes ayant fusionn√© ont une m√™me tendance politique.  
 
-## La variable du nombre de navettes inter-communes: nb_navettes  
+## La variable du nombre de navettes inter-communes : nb_navettes  
 
 ```{r}
 ggplot(dat1,aes(x=fusion,y=log(nb_navettes)))+geom_violin()+geom_boxplot(width=0.1)+
   xlab("Fusion") + ylab("Part de couples de communes")
 ```
 
-Nous sommes passÈs au logarithme afin de mieux visualiser la distribution, trËs asymÈtrique.
+Nous sommes pass√©s au logarithme afin de mieux visualiser la distribution, tr√®s asym√©trique.
 
-## Matrice des corrÈlations
+## Matrice des corr√©lations
+
 ```{r}
 #install.packages("corrplot")
 library(corrplot)
@@ -52,16 +55,16 @@ dat1_cor<-round(cor(mat_cor),2)
 corrplot(dat1_cor, method = "pie")
 ```
 
-On constate qu'il n'y a pas de corrÈlations linÈaires entre les variables de distances et les variables de nb.
-On voit qu'il y a des corrÈlations entre certaines variables. Par exemple, dist_P13_POP et dist_P13_LOC.  
+On constate qu'il n'y a pas de corr√©lations lin√©aires entre les variables de distances et les variables de nb.
+On voit qu'il y a des corr√©lations entre certaines variables. Par exemple, dist_P13_POP et dist_P13_LOC.  
 
 On garde toutes les variables afin de ne pas supprimer de la variance.  
 
-Avant de lancer les mÈthodes de ML, nous allons faire du clustering afin de voir s'il n'existerait pas de clusters de couples de communes.
+Avant de lancer les m?thodes de ML, nous allons faire du clustering afin de voir s'il n'existerait pas de clusters de couples de communes.
 
 ## Clustering
 
-Etant donnÈ, le nombre important de lignes et la faible capacitÈ de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions Ègalement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l'inertie interclasse (alors que le k-means minimise l'inertie intraclasse)
+Etant donn√© le nombre important de lignes et la faible capacit? de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions ?galement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l'inertie interclasse (alors que le k-means minimise l'inertie intraclasse)
 
 ```{r}
 library(dplyr)
@@ -76,10 +79,10 @@ for (ii in 1:20)
 unlist(lst_km.ss) %>% plot(col="blue",xlab="Nombre de classes",ylab="Variance interclasse")
 ```
 
-On voit que la variance intraclasse stagne ‡ partir de 6 classes.  
-On voit qu'avec les 6 classes, on retrace prËs de 90% de la variance totale
+On voit que la variance intraclasse stagne √† partir de 6 classes.  
+On voit qu'avec les 6 classes, on retrace pr√®s de 90% de la variance totale
 
-On affecte, ‡ chaque couple de communes, son cluster d'appartenance et on regarde dans chaque cluster la rÈpartition de la variable fusion 
+On affecte, √† chaque couple de communes, son cluster d'appartenance et on regarde dans chaque cluster la r√©partition de la variable fusion 
 
 ```{r}
 cl <- lst_km[[6]]$cluster
@@ -98,6 +101,14 @@ tableau<-table(dat1Cl$cl_class,dat1Cl$fusion_class) %>% addmargins()
 tableau
 ```
 
-On constate que le cluster 6 contient la quasi-totalitÈ des fusions.
+On constate que le cluster 1 contient la quasi-totalit√© des fusions. De plus, cette classe est marqu√©e est consitu√©e par les couples de communes les plus semblables :
+
+```{r}
+resum <- select(dat1Cl,-cl) %>%
+  group_by(cl_class) %>%
+  summarise_if(is.numeric,mean) %>% as.data.frame()
+kable(resum)
+```
+
 
 

@@ -32,6 +32,7 @@ corrplot(dat1_cor, method = "pie")
 #K means
 #attention, il faut r?duire et centrer qd les variables sont dans des unit?s diff?rentes
 #on fait sur les donn?es de l'ACP
+set.seed(1234)
 lst_km <- list()
 lst_km.ss <- list()
 for (ii in 1:20)
@@ -41,8 +42,8 @@ for (ii in 1:20)
 }
 unlist(lst_km.ss) %>% plot(col="blue",xlab="Nombre de classes",ylab="Variance interclasse")
 
-#On voit que la variance intra-classes stagne à partir de 6 classes.
-#On voit qu'avec les 5 classes, on a près de 90% de la variance totale 
+#On voit que la variance intra-classes stagne ? partir de 6 classes.
+#On voit qu'avec les 5 classes, on a pr?s de 90% de la variance totale 
 
 cl <- lst_km[[6]]$cluster
 
@@ -58,6 +59,14 @@ dat1Cl$cl_class<-paste("cluster",dat1Cl$cl)
 
 tableau<-table(dat1Cl$cl_class,dat1Cl$fusion_class) %>% addmargins()
 tableau
+
+resum <- select(dat1Cl,-cl) %>%
+  group_by(cl_class) %>%
+  summarise_if(is.numeric,mean) %>% as.data.frame()
+
+moy <- select(dat1Cl,-cl) %>%
+  summarise_if(is.numeric,mean) %>% as.data.frame()
+
 
 
 #Creation de plusieurs bases pour traiter le faible nombre de fusions
