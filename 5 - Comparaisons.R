@@ -3,19 +3,34 @@ require(sf)
 require(pROC)
 require(data.table)
 require(caret)
+require(rpart)
+require(visNetwork)
 
+load("Base.RData")
+
+arbres <- read.csv("PrevML_ARBRES.csv")
 prev.DNN <- read.csv("PrevML_DNN.csv")[,-1] %>% as.data.frame() 
-prev.reste <- read.csv("PrevML_REG_ARBRES.csv")[,-1] %>% as.data.frame() %>%
-  mutate(Y=as.factor(Y))
+# prev.reste <- read.csv("PrevML_REG_ARBRES.csv")[,-1] %>% as.data.frame() %>%
+#   mutate(Y=as.factor(Y)) %>% select(-arbre,-rf)
 
-prev <- cbind(prev.reste,prev.DNN)
+prev <- cbind(arbres[,-1],dnn[,-1])
+
+# prev <- cbind(prev.reste,prev.DNN)
 
 prev.roc  <- lapply(prev[,-1],function(x) roc(prev$Y,x))
-prev.bin <- lapply(prev.roc,function(x) x$response) %>% as.data.frame()
+prev.bin <- lapply(prev[,-1],function(x) (x>.5)+0) %>% as.data.frame()
 prev.conf <- lapply(prev.bin,function(x) confusionMatrix(x,prev$Y))
 
-par(mfrow=c(2,5))
+par(mfrow=c(2,2))
 lapply(prev.roc,plot)
+lapply(prev[,-1],function(x) plot(density(x),col="blue"))
+lapply(prev,function(x) sum(x>.5))
+
+arbre <- rpart(data=baseML,y~.)
+visTree(arbre)
+
+glm(data=baseML,formula = y~.,family=binomial) %>% summary()
+summary(g)
 
 save(prev,prev.roc,prev.conf,file="DiagML.RData")
 
