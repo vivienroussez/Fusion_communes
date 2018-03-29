@@ -10,6 +10,8 @@ Après ce travail, plusieurs pistes pourraient être explorées pour en augmente
 - Dupliquer, avec brouillage, les lignes correspondant aux couple fusionnés dans la base d'apprentissage
 - Traiter les données aberrantes et influentes, faire un peu plus de feature ingineering pour augementer la qualité des modèles basés sur la régression
 - Implémenter les SVM
-- Faire la partie ML sous python ...?
+- Faire la partie ML sous python ou Spark ...?
+- Séquencer les choix des communes et tester l'apprentissage par renforcement 
+
 
 

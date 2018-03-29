@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-28">
+<meta name="date" content="2018-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -101,7 +101,10 @@
 <li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
 <li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a><ul>
+<li class="chapter" data-level="4.1" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#modeles-testes"><i class="fa fa-check"></i><b>4.1</b> Modèles testés</a></li>
+<li class="chapter" data-level="4.2" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#quelques-resultats"><i class="fa fa-check"></i><b>4.2</b> Quelques résultats</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -127,22 +130,22 @@
 <p>Nous regardons la distribution d’une variable de chaque grande famille de données</p>
 <div id="la-variable-de-distance-sur-la-population-dist_p13_pop" class="section level2">
 <h2><span class="header-section-number">3.1</span> La variable de distance sur la population: dist_P13_POP</h2>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>On constate qu’il y a beaucoup de couple de communes qui ont une faible différence de population lors de la non-fusion. On retrouve le cas pour les communes rurales ou les grandes villes.</p>
 </div>
 <div id="la-variable-sur-lappartenance-politique-dist_pol1" class="section level2">
 <h2><span class="header-section-number">3.2</span> La variable sur l’appartenance politique: dist_Pol1</h2>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>On constate, sur les non-fusions, une grande disparité des valeurs, ce qui n’est pas le cas pour la fusion. Ce qui confirmerait que les communes ayant fusionné ont une même tendance politique.</p>
 </div>
 <div id="la-variable-du-nombre-de-navettes-inter-communes-nb_navettes" class="section level2">
 <h2><span class="header-section-number">3.3</span> La variable du nombre de navettes inter-communes : nb_navettes</h2>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>Nous sommes passés au logarithme afin de mieux visualiser la distribution, très asymétrique.</p>
 </div>
 <div id="matrice-des-correlations" class="section level2">
 <h2><span class="header-section-number">3.4</span> Matrice des corrélations</h2>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>On constate qu’il n’y a pas de corrélations linéaires entre les variables de distances et les variables de nb. On voit qu’il y a des corrélations entre certaines variables. Par exemple, dist_P13_POP et dist_P13_LOC.</p>
 <p>On garde toutes les variables afin de ne pas supprimer de la variance.</p>
 <p>Avant de lancer les méthodes de ML, nous allons faire du clustering afin de voir s’il n’existerait pas de clusters de couples de communes.</p>
@@ -150,7 +153,7 @@
 <div id="clustering" class="section level2">
 <h2><span class="header-section-number">3.5</span> Clustering</h2>
 <p>Etant donné le nombre important de lignes et la faible capacité de la machine. Nous ne ferons pas de CAH puis un K-means mais un k-means directement. Nous aurions ?galement pu faire un k-means pour diminuer le nombre de lignes et ensuite effectuer une CAH pour maximiser l’inertie interclasse (alors que le k-means minimise l’inertie intraclasse)</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>On voit que la variance intraclasse stagne à partir de 6 classes.<br />
 On voit qu’avec les 6 classes, on retrace près de 90% de la variance totale</p>
 <p>On affecte, à chaque couple de communes, son cluster d’appartenance et on regarde dans chaque cluster la répartition de la variable fusion</p>

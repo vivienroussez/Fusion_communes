@@ -8,12 +8,12 @@ require(visNetwork)
 
 load("Base.RData")
 
-arbres <- read.csv("PrevML_ARBRES.csv")
+arbres <- read.csv("PrevML_ARBRES.csv") %>% select(-X)
 prev.DNN <- read.csv("PrevML_DNN.csv")[,-1] %>% as.data.frame() 
-# prev.reste <- read.csv("PrevML_REG_ARBRES.csv")[,-1] %>% as.data.frame() %>%
-#   mutate(Y=as.factor(Y)) %>% select(-arbre,-rf)
+prev.reste <- fread("PrevML.csv")[,-1] %>% as.data.frame() %>%
+  mutate(Y=as.factor(Y)) %>% select(-ARBRE,-FORET)
 
-prev <- cbind(arbres[,-1],dnn[,-1])
+prev <- cbind(arbres,prev.DNN,prev.reste[,-1])
 
 # prev <- cbind(prev.reste,prev.DNN)
 
@@ -21,7 +21,7 @@ prev.roc  <- lapply(prev[,-1],function(x) roc(prev$Y,x))
 prev.bin <- lapply(prev[,-1],function(x) (x>.5)+0) %>% as.data.frame()
 prev.conf <- lapply(prev.bin,function(x) confusionMatrix(x,prev$Y))
 
-par(mfrow=c(2,2))
+par(mfrow=c(5,2))
 lapply(prev.roc,plot)
 lapply(prev[,-1],function(x) plot(density(x),col="blue"))
 lapply(prev,function(x) sum(x>.5))

@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-28">
+<meta name="date" content="2018-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -101,7 +101,10 @@
 <li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
 <li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a><ul>
+<li class="chapter" data-level="4.1" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#modeles-testes"><i class="fa fa-check"></i><b>4.1</b> Modèles testés</a></li>
+<li class="chapter" data-level="4.2" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#quelques-resultats"><i class="fa fa-check"></i><b>4.2</b> Quelques résultats</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -190,19 +193,19 @@
 <div id="analyse-factorielle-des-resultats" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Analyse factorielle des résultats</h3>
 <p>Maintenant que nous disposons d’une table exploitable, on peut réaliser une analyse factorielle pour pouvoir synthétiser le positionnement politique des communes. Pour cela, on effectue une analyse factorielle des correspondance, puisqu’on dispose de 2 variables qualitatives : la commune (individus lignes dans le tableau de contingence) et le candidat (individus colonne).</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>D’après l’histogramme des valeurs propres, on voit que l’inertie du tableau de contingence est très concentrée sur les 2 premiers axes factoriels, à hauteur de 70%. Le critère du point d’inflexion conduirait à retenir les 4 premiers axes (la dérivée seconde change de signe au niveau de la 4e valeur propre), pour 87% de l’inertie totale.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>On observe un effet Guttman assez net sur le premier plan factoriel : on a une opposition nette entre les candidats extrêmes à droite et les candidats “modérés” sur la gauche. Le second axes semble davantage retracer le clivage gauche-droite, avec les candidats Macron et Le Pen proche du barycentre. Le dexième plan factoriel donne lui à voir des différences moins structurantes à l’échelle nationale, mais on voit nettement la particularité “locale” du vote Lassalle, ainsi que (dans une moindre mesure) de celui en faveur de Dupont-Aignan.</p>
 <p>La représentation cartographique de ces axes factoriels :</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-1.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-14-2.png" width="672" /></p>
 </div>
 <div id="synthese-typologie-communale" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Synthèse : typologie communale</h3>
 <p>Pour la suite des opérations (modélisation de fusion/ non fusion), nous allons garder les 4 variables quantitatives obtenues par l’AFC mais pour pousser la démarche jusqu’au bout, nous réalisons une classification (clustering) des communes à partir des coordonnées factorielles obtenues. Etant donnés le nombre d’individus et le manque de puissance de la machine sur laquelle je travaille (4Go de RAM), une CAH est impossible (sauf à faire un premier k-means pour diminuer la dimension…), nous réalisons donc un clustering avec l’algorithme k-means puis dbscan</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Le gain de variance inter-classes augmente très rapidement quand on agmente le nombre de classe, mais le gain marginal s’atténue assez rapidement. On retient donc 5 classes, qui retracent près de 60% de la variance totale des quatre variables.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-16-1.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-16-2.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-16-3.png" width="672" /></p>
 
 </div>
 </div>

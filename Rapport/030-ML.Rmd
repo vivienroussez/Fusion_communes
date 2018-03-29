@@ -6,6 +6,7 @@ load("../Base.RData")
 load("../DiagML.RData")
 ```
 
+## Modèles testés
 
 Après nettoyage et sélection des features, la base de données pour exécuter le machine learning est donc constituée de 109082 observations et de 38 variables explicatives.
 
@@ -31,11 +32,14 @@ Le résultat de cette boucle est un dataframe contenant les prévisions (probabi
 
 Les résultats sont présentés dans l'application shiny dédiée au projet (courbes ROC, indicateur AUC et matrices de confusion).
 
+## Quelques résultats
+
 Globalement, on constate que les modèles à base d'arbres de décisions donnent de meilleurs résultat : il semble que le choix de fusionner soit déterministe, et guidé les proximités en termes de vote des habitants (vote modéré ou extrême). On peut penser que cette variable détermine également les habitudes collaboratives des communes, c'est à dire leur appartenance à une même structure intercommunale (EPCI, SCOT), et que les communes ayant des électorats proches peuvent plus facilement se regrouper dans le cadre d'un projet commun.
 
 
+
 ```{r}
-par(mfrow=c(2,2))
+par(mfrow=c(1,2))
 lapply(prev.roc,plot)
 lapply(prev[,-1],function(x) plot(density(x),col="blue"))
 lapply(prev,function(x) sum(x>.5))

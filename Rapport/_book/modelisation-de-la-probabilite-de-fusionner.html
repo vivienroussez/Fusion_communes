@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-28">
+<meta name="date" content="2018-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -101,7 +101,10 @@
 <li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
 <li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a><ul>
+<li class="chapter" data-level="4.1" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#modeles-testes"><i class="fa fa-check"></i><b>4.1</b> Modèles testés</a></li>
+<li class="chapter" data-level="4.2" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#quelques-resultats"><i class="fa fa-check"></i><b>4.2</b> Quelques résultats</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -124,6 +127,8 @@
             <section class="normal" id="section-">
 <div id="modelisation-de-la-probabilite-de-fusionner" class="section level1">
 <h1><span class="header-section-number">Chapitre 4</span> Modélisation de la probabilité de fusionner</h1>
+<div id="modeles-testes" class="section level2">
+<h2><span class="header-section-number">4.1</span> Modèles testés</h2>
 <p>Après nettoyage et sélection des features, la base de données pour exécuter le machine learning est donc constituée de 109082 observations et de 38 variables explicatives.</p>
 <pre><code>##  [1] &quot;dep&quot;                &quot;ze&quot;                 &quot;bv&quot;                
 ##  [4] &quot;au&quot;                 &quot;epci2014&quot;           &quot;epci2016&quot;          
@@ -155,8 +160,11 @@
 </ul>
 <p>La fonction est appelée dans une boucle <code>foreach</code> qui permet de paraléliser les traitements pour chaque bloc. On a ainsi pu diviser les temps de calcul par 3 (pour les modèles entrainés sur nos postes) ou par 7 (pour les modèles entraînés sur un serveur). Le résultat de cette boucle est un dataframe contenant les prévisions (probabilités) faites par les différents modèles sur les blocs de tests.</p>
 <p>Les résultats sont présentés dans l’application shiny dédiée au projet (courbes ROC, indicateur AUC et matrices de confusion).</p>
+</div>
+<div id="quelques-resultats" class="section level2">
+<h2><span class="header-section-number">4.2</span> Quelques résultats</h2>
 <p>Globalement, on constate que les modèles à base d’arbres de décisions donnent de meilleurs résultat : il semble que le choix de fusionner soit déterministe, et guidé les proximités en termes de vote des habitants (vote modéré ou extrême). On peut penser que cette variable détermine également les habitudes collaboratives des communes, c’est à dire leur appartenance à une même structure intercommunale (EPCI, SCOT), et que les communes ayant des électorats proches peuvent plus facilement se regrouper dans le cadre d’un projet commun.</p>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-1.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-2.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-3.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-4.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-5.png" width="672" /></p>
 <pre><code>## $ARBRE
 ## 
 ## Call:
@@ -187,8 +195,56 @@
 ## roc.default(response = prev$Y, predictor = x)
 ## 
 ## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
-## Area under the curve: 0.9008</code></pre>
-<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-27-2.png" width="672" /></p>
+## Area under the curve: 0.9008
+## 
+## $MCO
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.8203
+## 
+## $MCO.step
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.8201
+## 
+## $LASSO
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.7635
+## 
+## $RIDGE
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.8105
+## 
+## $ELASTIC
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.8114
+## 
+## $ADABOOST
+## 
+## Call:
+## roc.default(response = prev$Y, predictor = x)
+## 
+## Data: x in 107308 controls (prev$Y 0) &lt; 1774 cases (prev$Y 1).
+## Area under the curve: 0.9999</code></pre>
+<p><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-6.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-7.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-8.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-9.png" width="672" /><img src="Prévoir_les_fusions_de_communes_files/figure-html/unnamed-chunk-33-10.png" width="672" /></p>
 <pre><code>## $ARBRE
 ## NULL
 ## 
@@ -199,6 +255,24 @@
 ## NULL
 ## 
 ## $DNN2
+## NULL
+## 
+## $MCO
+## NULL
+## 
+## $MCO.step
+## NULL
+## 
+## $LASSO
+## NULL
+## 
+## $RIDGE
+## NULL
+## 
+## $ELASTIC
+## NULL
+## 
+## $ADABOOST
 ## NULL</code></pre>
 <pre><code>## $Y
 ## [1] 1774
@@ -213,10 +287,28 @@
 ## [1] 931
 ## 
 ## $DNN2
-## [1] 1043</code></pre>
+## [1] 1043
+## 
+## $MCO
+## [1] 253
+## 
+## $MCO.step
+## [1] 254
+## 
+## $LASSO
+## [1] 0
+## 
+## $RIDGE
+## [1] 0
+## 
+## $ELASTIC
+## [1] 0
+## 
+## $ADABOOST
+## [1] 109082</code></pre>
 <p>L’arbre de décision seul produisant déjà des résultats très satisfaisants, les forêts aléatoires et adaboost l’améliorent, mais légèrement. Les autres méthodes sont moins performantes. La régression par exemple, ne met autant en avant le pouvoir discriminant de la proximité politique</p>
-<div id="htmlwidget-b46abc5e56604b463dce" style="width:100%;height:600px;" class="visNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b46abc5e56604b463dce">{"x":{"nodes":{"id":[1,2,3],"label":["dist_Pol1","0","1"],"level":[1,2,2],"color":["#F1B8C2","#7D91B6","#B9828C"],"value":[109082,107294,1788],"shape":["dot","square","square"],"title":["<div style=\"text-align:center;\">N% : <b>100%<\/b> (109082)<br>Complexity : <b>0.992<\/b><br><hr> 0 : <b>98.4%<\/b> (107308)<br>1 : <b>1.6%<\/b> (1774)<\/div>","<div style=\"text-align:center;\">N% : <b>98.4%<\/b> (107294)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>100%<\/b> (107294)<br>1 : <b>0%<\/b> (0)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> >= 0<\/div><\/div><\/div>","<div style=\"text-align:center;\">N% : <b>1.6%<\/b> (1788)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>0.8%<\/b> (14)<br>1 : <b>99.2%<\/b> (1774)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> < 0<\/div><\/div><\/div>"],"fixed":[true,true,true],"colorClust":["#7D91B6","#7D91B6","#B9828C"],"labelClust":["0","0","1"],"Leaf":[0,1,1],"font.size":[16,16,16],"scaling.min":[22.5,22.5,22.5],"scaling.max":[22.5,22.5,22.5]},"edges":{"id":["edge1","edge2"],"from":[1,1],"to":[2,3],"label":[">= 0","< 0"],"value":[107294,1788],"title":["<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\">>=0<\/div>","<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\"><0<\/div>"],"color":["#8181F7","#8181F7"],"font.size":[14,14],"font.align":["horizontal","horizontal"],"smooth.enabled":[true,true],"smooth.type":["cubicBezier","cubicBezier"],"smooth.roundness":[0.5,0.5]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"hierarchical":{"enabled":true,"direction":"UD"}},"interaction":{"dragNodes":false,"selectConnectedEdges":false,"tooltipDelay":500},"edges":{"scaling":{"label":{"enabled":false}}}},"groups":null,"width":"100%","height":"600px","idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)"},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"footer":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":50000,"to":0},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":true,"resetHighlight":true,"clusterOptions":{"fixed":true,"physics":false}},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;\n                      white-space: nowrap;\n                      font-family: cursive;font-size:12px;font-color:purple;background-color: #E6E6E6;\n                      border-radius: 15px;","OnceEvents":{"stabilized":"function() { \n        this.setOptions({layout:{hierarchical:false}, physics:{solver:'barnesHut', enabled:true, stabilization : false}, nodes : {physics : false, fixed : true}});\n    }"},"legend":{"width":0.1,"useGroups":false,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["dist_Pol1","0","1"],"color":["#F1B8C2","#7D91B6","#B9828C"],"shape":["dot","square","square"],"size":[22,22,22],"Leaf":[0,1,1],"font.size":[16,16,16],"id":[10000,10001,10002]},"nodesToDataframe":true},"tree":{"updateShape":true,"shapeVar":"dot","shapeY":"square","colorVar":{"variable":["dist_Pol1"],"color":["#F1B8C2"]},"colorY":{"colorY":{"modality":["0","1"],"color":["#7D91B6","#B9828C"]},"vardecidedClust":["0","0","1"]}},"export":{"type":"png","css":"float:right;-webkit-border-radius: 10;\n                  -moz-border-radius: 10;\n                  border-radius: 10px;\n                  font-family: Arial;\n                  color: #ffffff;\n                  font-size: 12px;\n                  background: #090a0a;\n                  padding: 4px 8px 4px 4px;\n                  text-decoration: none;","background":"#fff","name":"network.png","label":"Export as png"}},"evals":["OnceEvents.stabilized"],"jsHooks":[]}</script>
+<div id="htmlwidget-77b76a6634215c78dae7" style="width:100%;height:600px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-77b76a6634215c78dae7">{"x":{"nodes":{"id":[1,2,3],"label":["dist_Pol1","0","1"],"level":[1,2,2],"color":["#F1B8C2","#7D91B6","#B9828C"],"value":[109082,107294,1788],"shape":["dot","square","square"],"title":["<div style=\"text-align:center;\">N% : <b>100%<\/b> (109082)<br>Complexity : <b>0.992<\/b><br><hr> 0 : <b>98.4%<\/b> (107308)<br>1 : <b>1.6%<\/b> (1774)<\/div>","<div style=\"text-align:center;\">N% : <b>98.4%<\/b> (107294)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>100%<\/b> (107294)<br>1 : <b>0%<\/b> (0)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> >= 0<\/div><\/div><\/div>","<div style=\"text-align:center;\">N% : <b>1.6%<\/b> (1788)<br>Complexity : <b>0.01<\/b><br><hr> 0 : <b>0.8%<\/b> (14)<br>1 : <b>99.2%<\/b> (1774)<hr class=\"rPartvisNetwork\"><div class=\"rPartvisNetworkTooltipShowhim\" style=\"color:blue;\">\n          <U>RULES<\/U><div class=\"rPartvisNetworkTooltipShowme\" style=\"color:black;\"><b> dist_Pol1 <\/b> < 0<\/div><\/div><\/div>"],"fixed":[true,true,true],"colorClust":["#7D91B6","#7D91B6","#B9828C"],"labelClust":["0","0","1"],"Leaf":[0,1,1],"font.size":[16,16,16],"scaling.min":[22.5,22.5,22.5],"scaling.max":[22.5,22.5,22.5]},"edges":{"id":["edge1","edge2"],"from":[1,1],"to":[2,3],"label":[">= 0","< 0"],"value":[107294,1788],"title":["<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\">>=0<\/div>","<div style=\"text-align:center;\"><b><\/b><\/div><div style=\"text-align:center;\"><0<\/div>"],"color":["#8181F7","#8181F7"],"font.size":[14,14],"font.align":["horizontal","horizontal"],"smooth.enabled":[true,true],"smooth.type":["cubicBezier","cubicBezier"],"smooth.roundness":[0.5,0.5]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"hierarchical":{"enabled":true,"direction":"UD"}},"interaction":{"dragNodes":false,"selectConnectedEdges":false,"tooltipDelay":500},"edges":{"scaling":{"label":{"enabled":false}}}},"groups":null,"width":"100%","height":"600px","idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)"},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"footer":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":50000,"to":0},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":true,"resetHighlight":true,"clusterOptions":{"fixed":true,"physics":false}},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;\n                      white-space: nowrap;\n                      font-family: cursive;font-size:12px;font-color:purple;background-color: #E6E6E6;\n                      border-radius: 15px;","OnceEvents":{"stabilized":"function() { \n        this.setOptions({layout:{hierarchical:false}, physics:{solver:'barnesHut', enabled:true, stabilization : false}, nodes : {physics : false, fixed : true}});\n    }"},"legend":{"width":0.1,"useGroups":false,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["dist_Pol1","0","1"],"color":["#F1B8C2","#7D91B6","#B9828C"],"shape":["dot","square","square"],"size":[22,22,22],"Leaf":[0,1,1],"font.size":[16,16,16],"id":[10000,10001,10002]},"nodesToDataframe":true},"tree":{"updateShape":true,"shapeVar":"dot","shapeY":"square","colorVar":{"variable":["dist_Pol1"],"color":["#F1B8C2"]},"colorY":{"colorY":{"modality":["0","1"],"color":["#7D91B6","#B9828C"]},"vardecidedClust":["0","0","1"]}},"export":{"type":"png","css":"float:right;-webkit-border-radius: 10;\n                  -moz-border-radius: 10;\n                  border-radius: 10px;\n                  font-family: Arial;\n                  color: #ffffff;\n                  font-size: 12px;\n                  background: #090a0a;\n                  padding: 4px 8px 4px 4px;\n                  text-decoration: none;","background":"#fff","name":"network.png","label":"Export as png"}},"evals":["OnceEvents.stabilized"],"jsHooks":[]}</script>
 <pre><code>## 
 ## Call:
 ## glm(formula = y ~ ., family = binomial, data = baseML)
@@ -277,6 +369,7 @@
 ## 
 ## Number of Fisher Scoring iterations: 25</code></pre>
 
+</div>
 </div>
             </section>
 
