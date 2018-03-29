@@ -25,7 +25,7 @@
 <meta name="author" content="Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les datagourdes">
 
 
-<meta name="date" content="2018-03-25">
+<meta name="date" content="2018-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,6 +47,15 @@
 
 
 
+<script src="libs/htmlwidgets-1.0/htmlwidgets.js"></script>
+<link href="libs/vis-4.20.1/vis.css" rel="stylesheet" />
+<script src="libs/vis-4.20.1/vis.min.js"></script>
+<script src="libs/visNetwork-binding-2.0.3/visNetwork.js"></script>
+<script src="libs/FileSaver-1.1.20151003/FileSaver.min.js"></script>
+<script src="libs/Blob-1.0/Blob.js"></script>
+<script src="libs/canvas-toBlob-1.0/canvas-toBlob.js"></script>
+<script src="libs/html2canvas-0.5.0/html2canvas.js"></script>
+<script src="libs/jspdf-1.3.2/jspdf.debug.js"></script>
 
 
 
@@ -66,7 +75,10 @@
 <li><a href="./">Prévoir les fusions de communes</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#pourquoi-ce-sujet"><i class="fa fa-check"></i><b>1.1</b> Pourquoi ce sujet ?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#pourquoi-pas-les-autres"><i class="fa fa-check"></i><b>1.2</b> Pourquoi pas les autres ?</a></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html"><i class="fa fa-check"></i><b>2</b> Contitution de la base de données</a><ul>
 <li class="chapter" data-level="2.1" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#creation-des-couples-de-communes"><i class="fa fa-check"></i><b>2.1</b> Création des couples de communes</a></li>
 <li class="chapter" data-level="2.2" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#indicateurs-communaux-mobilises"><i class="fa fa-check"></i><b>2.2</b> Indicateurs communaux mobilisés</a></li>
@@ -82,8 +94,18 @@
 <li class="chapter" data-level="2.7" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#imputations-et-corrections"><i class="fa fa-check"></i><b>2.7</b> Imputations et corrections</a></li>
 <li class="chapter" data-level="2.8" data-path="contitution-de-la-base-de-donnees.html"><a href="contitution-de-la-base-de-donnees.html#calcul-de-lindicateur-de-fusion"><i class="fa fa-check"></i><b>2.8</b> Calcul de l’indicateur de fusion</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a></li>
-<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a></li>
+<li class="chapter" data-level="3" data-path="analyse-des-features.html"><a href="analyse-des-features.html"><i class="fa fa-check"></i><b>3</b> Analyse des features</a><ul>
+<li class="chapter" data-level="3.1" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-de-distance-sur-la-population-dist_p13_pop"><i class="fa fa-check"></i><b>3.1</b> La variable de distance sur la population: dist_P13_POP</a></li>
+<li class="chapter" data-level="3.2" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-sur-lappartenance-politique-dist_pol1"><i class="fa fa-check"></i><b>3.2</b> La variable sur l’appartenance politique: dist_Pol1</a></li>
+<li class="chapter" data-level="3.3" data-path="analyse-des-features.html"><a href="analyse-des-features.html#la-variable-du-nombre-de-navettes-inter-communes-nb_navettes"><i class="fa fa-check"></i><b>3.3</b> La variable du nombre de navettes inter-communes : nb_navettes</a></li>
+<li class="chapter" data-level="3.4" data-path="analyse-des-features.html"><a href="analyse-des-features.html#matrice-des-correlations"><i class="fa fa-check"></i><b>3.4</b> Matrice des corrélations</a></li>
+<li class="chapter" data-level="3.5" data-path="analyse-des-features.html"><a href="analyse-des-features.html#clustering"><i class="fa fa-check"></i><b>3.5</b> Clustering</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html"><i class="fa fa-check"></i><b>4</b> Modélisation de la probabilité de fusionner</a><ul>
+<li class="chapter" data-level="4.1" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#modeles-testes"><i class="fa fa-check"></i><b>4.1</b> Modèles testés</a></li>
+<li class="chapter" data-level="4.2" data-path="modelisation-de-la-probabilite-de-fusionner.html"><a href="modelisation-de-la-probabilite-de-fusionner.html#quelques-resultats"><i class="fa fa-check"></i><b>4.2</b> Quelques résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -106,14 +128,30 @@
 <div id="header">
 <h1 class="title">Prévoir les fusions de communes</h1>
 <h4 class="author"><em>Eglantine Bigot-Haon, Vivien Roussez, Khouloud Zine Elabidine aka les <strong>datagourdes</strong></em></h4>
-<h4 class="date"><em>2018-03-25</em></h4>
+<h4 class="date"><em>2018-03-29</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapitre 1</span> Introduction</h1>
+<div id="pourquoi-ce-sujet" class="section level2">
+<h2><span class="header-section-number">1.1</span> Pourquoi ce sujet ?</h2>
+<div class="figure">
+<img src="img/Illustr.png" />
+
+</div>
 <p>En 2015, le projet de loi sur l’amélioration de la commune nouvelle est adopté. La même année, la loi pour une Nouvelle Organisation territoriale de la République (Notr) renforce les compétences des Régions et établissement publics de coopération intercommunale (EPCI, soit les communautés d’agglomération, de communes, etc…). Ces mesures interviennent dans un contexte de réformé territoriale visant à rationaliser les dotations de l’Etat afin d’augmenter la capacité des régions à entrer dans la compétition internationale, et de ernforcer la coopération entre communes afin de développer la mutualisation des services et réaliser des économies d’échelle.</p>
 <p>Par ailleurs, la France, avec près de 36 800 communes en 2015, regroupe à elle seule un tiers des communes de l’Union européenne. La plupart sont très petites (voir shiny), ce qui limite de fait les capacités d’action. C’est pourquoi, en plus de la loi NOTR, une loi concernant les communes nouvelles a été adoptée en 2015, et incite les communes, notamment les petites, à fusionner, avec une incitation fiscale assez forte : alors que les dotations de l’Etat baissent de façon générale, les communes ayant fusionnée voient leurs dotations gelées pour 3 ans.</p>
 <p>Depuis l’adoption de cette loi, on comptabilise près de 1750 fusions de communes, ce qui représente une baisse significative du nombre de collectivité, même si cela reste relativement modeste par rapport à la baisse du nombre de municipalités dans les autres pays européens, amorcée dès 1950 (jusqu’à -92 % au Danemark !).</p>
+</div>
+<div id="pourquoi-pas-les-autres" class="section level2">
+<h2><span class="header-section-number">1.2</span> Pourquoi pas les autres ?</h2>
+<p>Nous avions commencer à travailler sur deux autres sujets :</p>
+<ul>
+<li>La réutilisation des jeux de données mis à disposition sur data.gouv.fr</li>
+<li>Travail su le traffic et les accidents dans Paris à partir des données de opendata.paris.fr</li>
+</ul>
+<p>Pour le premier sujet, nous avons reculé après avoir constaté que les fichiers mis à disposition changeaient tous les jours, et surtout était systématiquement incomplets (manque de lignes). Sur le second sujet, la difficulté était de trouver un “individu statistique”&quot; sur lequel faire nos modélisation. Certaines données étaient géocodées au “tronçon”, d’autres à la rue, d’autres à l’XY… Le temps de traitement de la donnée aurait été trop important.</p>
 
+</div>
 </div>
             </section>
 
@@ -162,6 +200,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
